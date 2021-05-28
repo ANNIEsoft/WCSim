@@ -1,3 +1,7 @@
+# drawing is much quicker if we disable the visualisation first,
+# do the updates, then only re-enable once we're done. This way
+# the scene only gets drawn once.
+/vis/disable
 /vis/scene/create
 #/vis/open OGLSX
 # You can also set the size and position of the window if you like
@@ -65,7 +69,7 @@
 /vis/geometry/set/colour ANNIEp2v6-glassFaceWCPMT_D784KFLB -1 .6 1. 1. 1
 /vis/geometry/set/colour ANNIEp2v6-glassFaceWCPMT_R5912HQE -1 .6 .6 1. 1
 /vis/geometry/set/colour ANNIEp2v6-glassFaceWCPMT_R7081HQE -1 1.0 0.3 .3 1
-/vis/geometry/set/colour ANNIEp2v6-glassFaceWCONLYLAPPDS -1 0.6 0.6 0.6 1
+/vis/geometry/set/colour ANNIEp2v6-glassFaceWCONLYLAPPDS -1 0.6 0.8 0.5 1
 /vis/geometry/set/colour ANNIEp2v6-glassFaceWCPMT_EMI9954KB -1 1.0 0.3 .3 1
 
 ## MRD
@@ -220,7 +224,7 @@
 # use /vis/viewer/set/viewpointThetaPhi -112.5 -30 to view perpendicular to it
 #/vis/viewer/addCutawayPlane 0 0 1.6 m 0 0 -1 #<< show uptream haf of tank
 #/vis/viewer/addCutawayPlane 0 0 1.6 m 0 0 1  #<< show downstream half of tank
-# Use /vis/viewer/clearCutawayPlanes to remove them.
+## Use /vis/viewer/clearCutawayPlanes to remove them.
 #/vis/viewer/set/viewpointThetaPhi 90 90
 #/vis/viewer/addCutawayPlane 0 0 0 m -0.2 0 0.2
 #/vis/viewer/set/viewpointThetaPhi 70 0
@@ -234,3 +238,13 @@
 #/vis/viewer/pan 0 -2  
 #/vis/viewer/pan 0 -1
 #/vis/viewer/pan 0 3 
+
+#/vis/geometry/set/colour WC 1 0.5 0.5 0.5 1.0        # make tank steel completely opaque
+#/vis/geometry/set/visibility totVetolog -1 0         # hide the veto
+#/vis/viewer/set/viewpointThetaPhi -165.5 -30         # nice view downstream
+#/vis/viewer/addCutawayPlane 0 -14.46 168.1 cm 0 0 1  # cut away upstream half of tank
+#/vis/viewer/zoom 1.2                                 # 
+
+# re-enable and refresh to show the changes
+/vis/enable
+/vis/viewer/refresh
