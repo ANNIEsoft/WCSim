@@ -112,25 +112,7 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIE()
 //  G4VPhysicalVolume* expHall_phys = parser.GetWorldVolume();
 //  // if we wish to set visualisation properties, get logical volume
 //  G4LogicalVolume* expHall_log = expHall_phys->GetLogicalVolume();
-	
-	//============================================================
-	//               CADMESH stl to GDML conversion
-	//============================================================
-#ifdef ENABLE_CADMESH
-	// CADMESH STL to GDML file conversion for inner structure
-	// this is only written for conversion to gdml, not for integration into the actual geometry!
-	G4ThreeVector offset = G4ThreeVector(0, 0, 0);
-	static const G4double INCH = 2.54*cm;
-	CADMesh * mesh = new CADMesh("inner_structure.stl", INCH, offset, false);
-	G4VSolid* cad_solid = mesh->TessellatedMesh();
-	G4LogicalVolume* cad_logical = 
-		new G4LogicalVolume(cad_solid, G4Material::GetMaterial("StainlessSteel"), "cad_logical", 0, 0, 0);
-	G4VPhysicalVolume* cad_physical = 
-		new G4PVPlacement(0, G4ThreeVector(), cad_logical, "cad_physical", expHall_log, false, 0);
-	G4GDMLParser Parser;
-	Parser.Write("InnerStructure.gdml",cad_physical);
-#endif
-	
+  
   //============================================================
   //               Load Inner structure GDML file
   //============================================================
@@ -160,6 +142,24 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIE()
     new G4LogicalVolume(expHall_box,G4Material::GetMaterial("Air"),"Hall",0,0,0);
   G4VPhysicalVolume* expHall_phys = 
     new G4PVPlacement(0, G4ThreeVector(), expHall_log, "Hall", MatryoshkaMother, false, 0);
+  
+  //============================================================
+  //               CADMESH stl to GDML conversion
+  //============================================================
+#ifdef ENABLE_CADMESH
+  // CADMESH STL to GDML file conversion for inner structure
+  // this is only written for conversion to gdml, not for integration into the actual geometry!
+  G4ThreeVector offset = G4ThreeVector(0, 0, 0);
+  static const G4double INCH = 2.54*cm;
+  CADMesh * mesh = new CADMesh("inner_structure.stl", INCH, offset, false);
+  G4VSolid* cad_solid = mesh->TessellatedMesh();
+  G4LogicalVolume* cad_logical = 
+	new G4LogicalVolume(cad_solid, G4Material::GetMaterial("StainlessSteel"), "cad_logical", 0, 0, 0);
+  G4VPhysicalVolume* cad_physical = 
+	new G4PVPlacement(0, G4ThreeVector(), cad_logical, "cad_physical", expHall_log, false, 0);
+  G4GDMLParser Parser;
+  Parser.Write("InnerStructure.gdml",cad_physical);
+#endif
   
   //============================================================
   //                     Construct Tank
