@@ -10,6 +10,7 @@
 #include "WCSimWCPMT.hh"
 #include "WCSimWCLAPPD.hh"
 #include "WCSimDetectorConstruction.hh"
+#include "WCSimEventInformation.hh"
 
 #include "G4Event.hh"
 #include "G4RunManager.hh"
@@ -41,6 +42,8 @@
 #include "TFile.h"
 #include "WCSimRootEvent.hh"
 #include "TStopwatch.h"
+#include "TH1D.h"
+#include "TH2D.h"
 
 // GENIE headers
 #ifndef NO_GENIE
@@ -603,7 +606,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
     if (WCDC_hitslappd) {
      // add the truth raw hits
 #ifdef _SAVE_RAW_HITS_VERBOSE
-     G4cout<<"RAW HITS"<<G4endl;
+    G4cout<<"RAW HITS"<<G4endl;
 #endif
      // wcsimrootevent->SetNumTubesHit(WCDC_hitslappd->entries());
      // std::vector<float> truetime2, smeartime2;
@@ -1302,6 +1305,22 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
   theheader->SetDirtEntryNum(dirtEventNumber);
   theheader->SetGenieEntryNum(genieEventNumber);
 
+  G4Event *event = G4EventManager::GetEventManager()->GetNonconstCurrentEvent();
+  WCSimEventInformation *evInfo = dynamic_cast<WCSimEventInformation*>(event->GetUserInformation());
+  Int_t num_cheren = evInfo->numCherenPhoton;
+  wcsimrootevent->SetNCherenkov(num_cheren);
+  wcsimrootevent->SetNCherenkovWCSim(evInfo->numCherenPhotonWCSim);
+  
+  // -------
+  // Cherenkov photon histograms are disabled at the moment, can be uncommented if needed 
+  // HCher: 1D Histogram (60nm - 700nm), HCherWCSim: 1D Histogram (200nm - 700nm)
+  // -------
+
+  //wcsimrootevent->SetHCher(&(evInfo->hCher));
+  //wcsimrootevent->SetHCherWCSim(&(evInfo->hCherWCSim));
+  //wcsimrootevent->SetHCherXZ(&(evInfo->hCherXZ));
+  //wcsimrootevent->SetHCherYZ(&(evInfo->hCherYZ));
+
   // Fill other info for this event
 
   wcsimrootevent->SetMode(jhfNtuple.mode);
@@ -1591,6 +1610,7 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
   wcsimrootevent->SetNumTubesHit(jhfNtuple.numTubesHit);
 #ifdef _SAVE_RAW_HITS
 
+
   if (WCDC_hits) 
   {
     //add the truth raw hits
@@ -1731,6 +1751,7 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
   //G4cout <<"WCFV digi sumQ:"<<std::setw(4)<<wcsimrootevent->GetSumQ()<<"  ";
   //  }
   TBranch* branch = GetRunAction()->GetBranch(detectorElement);
+  branch->Print();
   branch->Fill();
 //  TFile* hfile = tree->GetCurrentFile();
 //  // MF : overwrite the trees -- otherwise we have as many copies of the tree

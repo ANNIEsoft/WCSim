@@ -11,9 +11,9 @@
 #include <G4ParticleDefinition.hh>
 #include <G4ProcessManager.hh>
 
+
 #include "WCSimPhysicsListFactoryMessenger.hh"
 #include "WCSimRootOptions.hh"
-#include "PhysicsListRAT.hh"
 
 //class WCSimPhysicsList;
 
@@ -34,8 +34,6 @@ class WCSimPhysicsListFactory : public G4VModularPhysicsList
     void AddParameterization();
 
     void SaveOptionsToOutput(WCSimRootOptions * wcopt);
-
-    PhysicsListRAT *rat;
 
   private:
 

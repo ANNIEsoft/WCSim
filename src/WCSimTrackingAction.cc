@@ -5,10 +5,14 @@
 #include "G4Track.hh"
 #include "G4ios.hh"
 #include "G4VProcess.hh"
+#include "G4UserEventAction.hh"
+#include "G4EventManager.hh"
 #include "WCSimTrackInformation.hh"
+#include "WCSimEventInformation.hh"
 #include "G4TransportationManager.hh"
 #include "G4SystemOfUnits.hh"
 #include "G4PhysicalConstants.hh"
+#include "G4Event.hh"
 #include <algorithm>
 
 WCSimTrackingAction::WCSimTrackingAction(){
@@ -52,7 +56,29 @@ void WCSimTrackingAction::PreUserTrackingAction(const G4Track* aTrack){
   } else {
       fpTrackingManager->SetStoreTrajectory(false);
   }
-  
+ 
+  if (aTrack->GetDefinition()->GetParticleName() == "opticalphoton"){
+    G4Event* event = G4EventManager::GetEventManager()->GetNonconstCurrentEvent();
+    WCSimEventInformation* evInfo = dynamic_cast<WCSimEventInformation*> (event->GetUserInformation());
+    WCSimTrackInformation* trackInfo= dynamic_cast<WCSimTrackInformation*> (aTrack->GetUserInformation());
+    std::string creatorProcessName="";
+    const G4VProcess *creatorProcess = aTrack->GetCreatorProcess();
+
+    if (creatorProcess) creatorProcessName = creatorProcess->GetProcessName();
+    if (creatorProcessName == "Cerenkov") {
+	evInfo->numCherenPhoton++;
+        G4float photonWavelength = (2.0*M_PI*197.3)/(aTrack->GetTotalEnergy()/CLHEP::eV);
+        evInfo->hCher.Fill(photonWavelength);
+        if (photonWavelength >= 200 && photonWavelength < 790) {
+          evInfo->numCherenPhotonWCSim++;
+          evInfo->hCherWCSim.Fill(photonWavelength);
+          G4ThreeVector photonPosition = aTrack->GetVertexPosition();
+          evInfo->hCherXZ.Fill(photonPosition.z()/1000.,photonPosition.x()/1000.);
+          evInfo->hCherYZ.Fill(photonPosition.z()/1000.,photonPosition.y()/1000.);
+        }
+    }
+  }
+ 
   /*
   // implemented to allow photon tracks to be drawn during photon debugging, 
   // but interferes with saving of primary information.
