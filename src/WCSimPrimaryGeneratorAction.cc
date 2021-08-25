@@ -145,6 +145,8 @@ void WCSimPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
   G4bool useNuanceTextFormat = true;
 
+  WCSimEventInformation *eventInfo = new WCSimEventInformation();
+  anEvent->SetUserInformation((G4VUserEventInformation*) eventInfo);
 
   // Do for every event
 
