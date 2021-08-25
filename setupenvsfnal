@@ -6,7 +6,10 @@ setup_annie_g410()
 
   source /grid/fermiapp/products/common/etc/setup
 
-  export PRODUCTS=${PRODUCTS}:/grid/fermiapp/products/larsoft
+  #export PRODUCTS=${PRODUCTS}:/grid/fermiapp/products/larsoft
+  export PRODUCTS=${PRODUCTS}:/grid/fermiapp/products/larsoft:/cvmfs/fermilab.opensciencegrid.org/products
+
+  source /cvmfs/fermilab.opensciencegrid.org/products/common/etc/setup
 
 #  setup genie v2_8_6d -q e9:debug
 
@@ -14,14 +17,17 @@ setup_annie_g410()
 
 #  setup genie_phyopt v2_8_6 -q dkcharmtau
 
-  setup geant4 v4_10_1_p02a -q e9:debug:qt
-
+  #setup geant4 v4_10_1_p02a -q e9:debug:qt
+ # setup geant4 v4_10_1_p02a
+  setup geant4         v4_10_1_p03a -q debug:e10:qt
 }
 
 # type at the command line (but NOT in .bashrc!)
 setup_annie_g410
 
-setup cmake	#sets up 2_8_8 
+setup cmake        v3_0_1
+
+#setup cmake	#sets up 2_8_8 
 #setup -f Linux64bit+2.6-2.12 cmake v3_6_2a	# sets compiler to gcc 4.4! doesn't support c++14... 
 
 #setup -f Linux64bit+2.6-2.12 -q debug:e9:nu root v6_04_06
@@ -32,7 +38,8 @@ source /grid/fermiapp/products/larsoft/root/v6_06_08/Linux64bit+2.6-2.12-e10-nu-
 setup -f Linux64bit+2.6-2.12 -q debug:e10:r6 genie v2_12_0a
 
 #overwrite the clhep setup set by genie
-setup -f Linux64bit+2.6-2.12 -q debug:e9 clhep v2_2_0_8
+#setup -f Linux64bit+2.6-2.12 -q debug:e9 clhep v2_2_0_8
+setup clhep        v2_3_2_2 -q debug:e10
 
 setup -f Linux64bit+2.6-2.12 -q debug:e10 xerces_c v3_1_3
 export XERCESROOT=/grid/fermiapp/products/larsoft/xerces_c/v3_1_3/Linux64bit+2.6-2.12-e10-debug
@@ -43,7 +50,15 @@ export G4SYSTEM=Linux-g++
 #export ROOT_PATH=/grid/fermiapp/products/larsoft/root/v6_04_06/source/root-6.04.06/etc/cmake
 export ROOT_PATH=/grid/fermiapp/products/larsoft/root/v6_06_08/Linux64bit+2.6-2.12-e10-nu-debug/cmake
 
-export GEANT4_PATH=/grid/fermiapp/products/larsoft/geant4/v4_10_1_p02a/Linux64bit+2.6-2.12-e9-qt-debug/lib64/Geant4-10.1.2
+#export GEANT4_PATH=/grid/fermiapp/products/larsoft/geant4/v4_10_1_p02a/Linux64bit+2.6-2.12-e9-qt-debug/lib64/Geant4-10.1.2
 
-export GEANT4_MAKEFULL_PATH=/grid/fermiapp/products/larsoft/geant4/v4_10_1_p02a/source/geant4.10.01.p02
+#export GEANT4_MAKEFULL_PATH=/grid/fermiapp/products/larsoft/geant4/v4_10_1_p02a/source/geant4.10.01.p02
 
+export GEANT4_PATH=/cvmfs/larsoft.opensciencegrid.org/products/geant4/v4_10_1_p03a/Linux64bit+2.6-2.12-e10-qt-debug/lib64/Geant4-10.1.3
+export GEANT4_MAKEFULL_PATH=/cvmfs/larsoft.opensciencegrid.org/products/geant4/v4_10_1_p03a/source/geant4.10.01.p03
+
+export LIBRARY_PATH=${LIBRARY_PATH}:/cvmfs/annie.opensciencegrid.org/products/toolanalysis/v0_0_0/extras_for_oasis_build
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/cvmfs/annie.opensciencegrid.org/products/toolanalysis/v0_0_0/extras_for_oasis_build
+
+#export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/cvmfs/larsoft.opensciencegrid.org/products/qt/v5_10_1a/Linux64bit+2.6-2.12-e15/
+export CMAKE_PREFIX_PATH=$CMAKE_PREFIX_PATH:/cvmfs/larsoft.opensciencegrid.org/products/qt/v5_4_2a/Linux64bit+2.6-2.12-e9/
