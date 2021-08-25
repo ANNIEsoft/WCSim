@@ -2,6 +2,7 @@
 #include "WCSimPrimaryGeneratorAction.hh"
 #include "WCSimDetectorConstruction.hh"
 #include "WCSimPrimaryGeneratorMessenger.hh"
+#include "WCSimEventInformation.hh"
 
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
