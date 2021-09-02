@@ -23,17 +23,29 @@ WCSimPhysicsListFactoryMessenger::WCSimPhysicsListFactoryMessenger(WCSimPhysicsL
   physListCmd->SetCandidates(ValidListsString);  // TODO get list of physics lists from G4PhysicsListFactory
 
   SetNewValue(physListCmd, defaultList);
+
+  G4String captureModelsString = "Default HP Rad GLG4Sim ANNRI";
+  G4String captureModelGuidance = "Available options: " + captureModelsString;
+  nCaptureModelCmd = new G4UIcmdWithAString("/WCSim/physics/nCapture",this);
+  nCaptureModelCmd->SetGuidance(captureModelGuidance);
+  nCaptureModelCmd->SetDefaultValue("Default");
+  nCaptureModelCmd->SetCandidates(captureModelsString);
 }
 
 WCSimPhysicsListFactoryMessenger::~WCSimPhysicsListFactoryMessenger()
 {
   delete physListCmd;
   //delete WCSimDir;
+  delete nCaptureModelCmd;
+
 }
 
 void WCSimPhysicsListFactoryMessenger::SetNewValue(G4UIcommand* command, G4String newValue)
 {
   if (command == physListCmd)
     thisWCSimPhysicsListFactory->SetList(newValue);
+  else if (command == nCaptureModelCmd){
+     thisWCSimPhysicsListFactory->SetnCaptModel(newValue);
+   }
 
 }
