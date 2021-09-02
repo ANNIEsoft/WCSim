@@ -36,6 +36,8 @@ class WCSimPhysicsListFactory : public G4VModularPhysicsList
     G4String ValidListsString;
 
     G4String nCaptModelChoice;
+    G4String gdCompositionChoice;
+    G4String gdCascadeChoice;
 
     WCSimPhysicsListFactoryMessenger* PhysicsMessenger;
     G4PhysListFactory* factory;

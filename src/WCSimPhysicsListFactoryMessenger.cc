@@ -30,6 +30,20 @@ WCSimPhysicsListFactoryMessenger::WCSimPhysicsListFactoryMessenger(WCSimPhysicsL
   nCaptureModelCmd->SetGuidance(captureModelGuidance);
   nCaptureModelCmd->SetDefaultValue("Default");
   nCaptureModelCmd->SetCandidates(captureModelsString);
+
+  G4String gdCompositionString = "Natural 157Gd-enr 155Gd-enr";
+  G4String gdCompositionGuidance = "Available options: " + gdCompositionString;
+  gdCompositionCmd = new G4UIcmdWithAString("/WCSim/physics/GdComposition",this);
+  gdCompositionCmd->SetGuidance(gdCompositionGuidance);
+  gdCompositionCmd->SetDefaultValue("Natural");
+  gdCompositionCmd->SetCandidates(gdCompositionString);
+
+  G4String gdCascadeString = "PeakAndCont Peak Cont";
+  G4String gdCascadeGuidance = "Available options: " + gdCascadeString;
+  gdCascadeCmd = new G4UIcmdWithAString("/WCSim/physics/GdCascade",this);
+  gdCascadeCmd->SetGuidance(gdCascadeGuidance);
+  gdCascadeCmd->SetDefaultValue("PeakAndCont");
+  gdCascadeCmd->SetCandidates(gdCascadeString);
 }
 
 WCSimPhysicsListFactoryMessenger::~WCSimPhysicsListFactoryMessenger()
@@ -37,6 +51,8 @@ WCSimPhysicsListFactoryMessenger::~WCSimPhysicsListFactoryMessenger()
   delete physListCmd;
   //delete WCSimDir;
   delete nCaptureModelCmd;
+  delete gdCompositionCmd;
+  delete gdCascadeCmd;
 
 }
 
@@ -46,6 +62,10 @@ void WCSimPhysicsListFactoryMessenger::SetNewValue(G4UIcommand* command, G4Strin
     thisWCSimPhysicsListFactory->SetList(newValue);
   else if (command == nCaptureModelCmd){
      thisWCSimPhysicsListFactory->SetnCaptModel(newValue);
+   } else if (command == gdCompositionCmd){
+     thisWCSimPhysicsListFactory->SetgdComposition(newValue);
+   } else if (command == gdCascadeCmd){
+     thisWCSimPhysicsListFactory->SetgdCascade(newValue);
    }
 
 }

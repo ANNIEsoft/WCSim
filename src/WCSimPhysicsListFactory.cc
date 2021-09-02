@@ -8,6 +8,7 @@
 #include <G4CrossSectionDataSetRegistry.hh>
 
 #include "GdNeutronHPCapture.hh"
+#include "GdNeutronHPCaptureANNRI.hh"
 
 #include "WCSimPhysicsListFactory.hh"
 #include "G4NeutronHPManager.hh"
@@ -85,7 +86,7 @@ void WCSimPhysicsListFactory::ConstructProcess()
                  theNeutronHPCapture = new GdNeutronHPCapture();
 	     } else if (nCaptModelChoice.compareTo("ANNRI",G4String::ignoreCase) == 0){
                  G4cout << "Enabling ANNRI nCapture process" << G4endl;
-                 //theNeutronHPCapture = new ANNRIGdCapture();
+                 theNeutronHPCapture = new GdNeutronHPCaptureANNRI(gdCompositionChoice,gdCascadeChoice);
              } else if (nCaptModelChoice.compareTo("HP", G4String::ignoreCase) == 0) {
                  G4cout << "Enabling HP nCapture process" << G4endl;
                  theNeutronHPCapture = new G4NeutronHPCapture();
@@ -126,6 +127,16 @@ void WCSimPhysicsListFactory::SetCuts()
 void WCSimPhysicsListFactory::SetnCaptModel(G4String newvalue){
      G4cout << "Setting neutron capture model to " << newvalue << G4endl;
      nCaptModelChoice = newvalue;
+}
+
+void WCSimPhysicsListFactory::SetgdComposition(G4String newvalue){
+    G4cout << "Setting Gd composition to " << newvalue << G4endl;
+    gdCompositionChoice = newvalue;
+}
+
+void WCSimPhysicsListFactory::SetgdCascade(G4String newvalue){
+    G4cout << "Setting Gd cascade model to " << newvalue << G4endl;
+    gdCascadeChoice = newvalue;
 }
 
 void WCSimPhysicsListFactory::SetList(G4String newvalue){
