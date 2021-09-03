@@ -40,7 +40,7 @@ class GdNeutronHPCaptureFSANNRI : public G4NeutronHPFinalState
 {
 	public:
 
-		GdNeutronHPCaptureFSANNRI();
+		GdNeutronHPCaptureFSANNRI(G4int _gdcapture, G4int _gdcascade);
 		~GdNeutronHPCaptureFSANNRI();
 
 		void   UpdateNucleus( const G4Fragment* , G4double );
@@ -48,7 +48,7 @@ class GdNeutronHPCaptureFSANNRI : public G4NeutronHPFinalState
 		G4HadFinalState * ApplyYourself(const G4HadProjectile & theTrack);
 		G4NeutronHPFinalState * New() 
 		{
-			GdNeutronHPCaptureFSANNRI * theNew = new GdNeutronHPCaptureFSANNRI;
+			GdNeutronHPCaptureFSANNRI * theNew = new GdNeutronHPCaptureFSANNRI(Gd_CAPTURE,Gd_CASCADE);
 			return theNew;
 		}
 
@@ -59,8 +59,8 @@ class GdNeutronHPCaptureFSANNRI : public G4NeutronHPFinalState
 
 		G4int    Gd_CAPTURE; //1:natural , 2:enriched 157Gd, 3:enriched 155Gd
 		G4int    Gd_CASCADE; //1:discrete + continuum; 2:discrete, 3:continuum
-		G4String Gd157_ROOTFile="cont_dat/158GdContTbl__E1SLO4__HFB.root";
-		G4String Gd155_ROOTFile="cont_dat/156GdContTbl__E1SLO4__HFB.root";
+		G4String Gd157_ROOTFile="../WCSim/cont_dat/158GdContTbl__E1SLO4__HFB.root";
+		G4String Gd155_ROOTFile="../WCSim/cont_dat/156GdContTbl__E1SLO4__HFB.root";
 
 		G4Fragment * nucleus;
 
@@ -81,6 +81,8 @@ class GdNeutronHPCaptureFSANNRI : public G4NeutronHPFinalState
 		G4double theCurrentZ;
 
 		DrawMessage Printing;
+
+		G4HadFinalState theResult;
 
 	private:
 

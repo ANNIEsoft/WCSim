@@ -18,8 +18,8 @@
 #include "TString.h"
 
 extern std::ofstream outf;
-extern int NumGamma;
-extern double GammaEnergies[15];
+//extern int NumGamma;
+//double GammaEnergies[15];
 
 namespace Rnd = ANNRIGdGammaSpecModel::Random;
 namespace Aux = ANNRIGdGammaSpecModel::Auxiliary;
@@ -157,11 +157,12 @@ ANNRIGd_158GdContinuumModelV2::DoGenerate() const
 	}
 
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 
-/*	outf<<NumGamma<<" ";
-	for (int i=0; i<NumGamma; i++) {
+/*	outf<< NumGamma<<" ";
+	for (int i=0; i< NumGamma; i++) {
 		outf<<energies[i].second<<" ";
 	}
 	outf<<endl;

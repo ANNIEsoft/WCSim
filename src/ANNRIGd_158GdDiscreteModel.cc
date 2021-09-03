@@ -21,8 +21,8 @@ using Aux::ParticleEnergies;
 using std::cout;
 using std::endl;
 
-extern int NumGamma;
-extern double GammaEnergies[15];
+//extern int NumGamma;
+//double GammaEnergies[15];
 
 
 //==============================================================================
@@ -132,7 +132,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete01(
 		energies.push_back(ParticleEnergy(22, 0.080)); // 3rd gamma ray
 	}
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 
 	Aux::FillRndmDirProducts(products, energies);
@@ -212,7 +213,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete02(
 	}
 
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 }
@@ -235,7 +237,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete03(
 	energies.push_back(ParticleEnergy(22, 2.262)); // 2nd gamma ray
 	energies.push_back(ParticleEnergy(22, 0.080)); // 3rd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY -2342 keV
@@ -259,7 +262,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete04(
 	energies.push_back(ParticleEnergy(22, 2.188)); // 2nd gamma ray
 	energies.push_back(ParticleEnergy(22, 0.080)); // 3rd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY -2268 keV
@@ -283,7 +287,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete05(
 	energies.push_back(ParticleEnergy(22, 2.690)); // 2nd gamma ray
 	energies.push_back(ParticleEnergy(22, 0.080)); // 3rd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY -2270 keV
@@ -329,7 +334,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete06(
 	}
 
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 }
@@ -351,7 +357,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete07(
 	energies.push_back(ParticleEnergy(22, 2.314)); // 2nd gamma ray
 	energies.push_back(ParticleEnergy(22, 0.080)); // 3rd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY -2394 keV
@@ -374,7 +381,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete08(
 	energies.push_back(ParticleEnergy(22, 2.073)); // 2nd gamma ray
 	energies.push_back(ParticleEnergy(22, 0.080)); // 3rd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY -2153 keV
@@ -412,7 +420,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete09(
 	}
 
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 }
@@ -434,7 +443,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete10(
 	energies.push_back(ParticleEnergy(22, 2.421)); // 2nd gamma ray
 	energies.push_back(ParticleEnergy(22, 0.080)); // 3rd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY -2501 keV
@@ -469,7 +479,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete11(
 	}
 
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY -1936 keV
@@ -492,7 +503,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete12(
 	energies.push_back(ParticleEnergy(22, 0.944)); // 2nd gamma ray
 	energies.push_back(ParticleEnergy(22, 0.080)); // 3rd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY 1 keV
@@ -514,7 +526,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete13(
 	energies.push_back(ParticleEnergy(22, 7.857)); // 1st gamma ray
 	energies.push_back(ParticleEnergy(22, 0.080)); // 2nd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 }
@@ -535,7 +548,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete14(
 	energies.push_back(ParticleEnergy(22, 6.960)); // 1st gamma ray
 	energies.push_back(ParticleEnergy(22, 0.977)); // 2nd gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 	// TODO VIOLATES Q-VALUE BY -977 keV
@@ -557,7 +571,8 @@ ANNRIGd_158GdDiscreteModel::Fill_158Gd_Discrete15(
 	ParticleEnergies energies;
 	energies.push_back(ParticleEnergy(22, 7.937)); // 1st gamma ray
 //save gamma multiplicity
-NumGamma = energies.size();
+int NumGamma = energies.size();
+double GammaEnergies[15]={0};
 for(int i=0;i<NumGamma;i++) GammaEnergies[i] = energies[i].second;
 	Aux::FillRndmDirProducts(products, energies);
 }

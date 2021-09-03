@@ -18,13 +18,14 @@
 #include "G4PhotonEvaporation.hh"
 #include "G4Fragment.hh"
 #include "G4ParticleTable.hh" 
+#include "G4IonTable.hh"
 #include "G4NeutronHPDataUsed.hh"
 #include "ANNRIGd_GdNCaptureGammaGenerator.hh"
 #include "ANNRIGd_GeneratorConfigurator.hh"
 #include "ANNRIGd_OutputConverter.hh"
 namespace AGd = ANNRIGdGammaSpecModel;
 
-#define File_Name "GdNeutronHPCaptireFS.cc"
+#define File_Name "GdNeutronHPCaptureFSANNRI.cc"
 
 // use a static generator to avoid the construction and loading of data
 // files for each Gd isotope
@@ -66,7 +67,8 @@ G4HadFinalState * GdNeutronHPCaptureFSANNRI::ApplyYourself(const G4HadProjectile
 	G4ReactionProduct theTarget; 
 	G4Nucleus aNucleus;
 	G4double eps = 0.0001;
-	if(targetMass<500*MeV)
+	//if(targetMass<500*MeV)
+	if(targetMass<500*CLHEP::MeV)
 		//targetMass = ( G4NucleiPropertiesTable::GetNuclearMass(static_cast<G4int>(theBaseZ+eps), static_cast<G4int>(theBaseA+eps))) /
 		targetMass = ( G4NucleiProperties::GetNuclearMass( static_cast<G4int>(theBaseA+eps) , static_cast<G4int>(theBaseZ+eps) )) /
 			G4Neutron::Neutron()->GetPDGMass();
@@ -96,7 +98,7 @@ G4HadFinalState * GdNeutronHPCaptureFSANNRI::ApplyYourself(const G4HadProjectile
 	G4ThreeVector aCMSMomentum = theNeutron.GetMomentum()+theTarget.GetMomentum();
 	G4LorentzVector p4(aCMSMomentum, theTarget.GetTotalEnergy() + theNeutron.GetTotalEnergy());
 	nucleus = new G4Fragment(static_cast<G4int>(theBaseA+1), static_cast<G4int>(theBaseZ) ,p4);
-
+	
 	G4int nPhotons = 0;
 	if(thePhotons!=NULL) nPhotons=thePhotons->size();
 	for(i=0;i<nPhotons;i++){
@@ -107,8 +109,10 @@ G4HadFinalState * GdNeutronHPCaptureFSANNRI::ApplyYourself(const G4HadProjectile
 		UpdateNucleus(theOne,thePhotons->operator[](i)->GetTotalEnergy());
 	}
 	theTwo = new G4DynamicParticle;
-	theTwo->SetDefinition(G4ParticleTable::GetParticleTable()
-			->FindIon(static_cast<G4int>(theBaseZ), static_cast<G4int>(theBaseA+1), 0, static_cast<G4int>(theBaseZ)));
+	//theTwo->SetDefinition(G4ParticleTable::GetParticleTable()
+	theTwo->SetDefinition(G4IonTable::GetIonTable()
+			->GetIon(static_cast<G4int>(theBaseZ), static_cast<G4int>(theBaseA+1)));
+			//->FindIon(static_cast<G4int>(theBaseZ), static_cast<G4int>(theBaseA+1), 0, static_cast<G4int>(theBaseZ)));
 	theTwo->SetMomentum(nucleus->GetMomentum());
 
 	/////////////add them to the final state///////////////
@@ -123,8 +127,10 @@ G4HadFinalState * GdNeutronHPCaptureFSANNRI::ApplyYourself(const G4HadProjectile
 	//////////////Recoil, if only one gamma//////////////
 	if (1==nPhotons){
 		G4DynamicParticle * theOne = new G4DynamicParticle;
-		G4ParticleDefinition * aRecoil = G4ParticleTable::GetParticleTable()
-			->FindIon(static_cast<G4int>(theBaseZ), static_cast<G4int>(theBaseA+1), 0, static_cast<G4int>(theBaseZ));
+		//G4ParticleDefinition * aRecoil = G4ParticleTable::GetParticleTable()
+		G4ParticleDefinition * aRecoil = G4IonTable::GetIonTable()
+			->GetIon(static_cast<G4int>(theBaseZ), static_cast<G4int>(theBaseA+1));
+			//->FindIon(static_cast<G4int>(theBaseZ), static_cast<G4int>(theBaseA+1), 0, static_cast<G4int>(theBaseZ));
 		theOne->SetDefinition(aRecoil);
 		// Now energy; 
 		// Can be done slightly better @
@@ -167,7 +173,6 @@ G4HadFinalState * GdNeutronHPCaptureFSANNRI::ApplyYourself(const G4HadProjectile
 void GdNeutronHPCaptureFSANNRI::UpdateNucleus( const G4Fragment* gamma , G4double eGamma )
 	//////////////////////////////////////////////////////////////////////////////////////
 {
-
 	G4LorentzVector p4Gamma = gamma->GetMomentum();
 	G4ThreeVector pGamma(p4Gamma.vect());
 
@@ -175,7 +180,10 @@ void GdNeutronHPCaptureFSANNRI::UpdateNucleus( const G4Fragment* gamma , G4doubl
 
 	G4ParticleTable* theTable = G4ParticleTable::GetParticleTable();
 
-	G4double m1 = theTable->FindIon(static_cast<G4int>(nucleus->GetZ()), static_cast<G4int>(nucleus->GetA()), 0, static_cast<G4int>(nucleus->GetZ())) ->GetPDGMass();
+	//G4double m1 = theTable->FindIon(static_cast<G4int>(nucleus->GetZ()), static_cast<G4int>(nucleus->GetA()), 0, static_cast<G4int>(nucleus->GetZ())) ->GetPDGMass();
+	
+	//G4double m1 = G4IonTable::GetIonTable()->FindIon(static_cast<G4int>(nucleus->GetZ()), static_cast<G4int>(nucleus->GetA()), 0, static_cast<G4int>(nucleus->GetZ())) ->GetPDGMass();
+	G4double m1 = G4IonTable::GetIonTable()->GetIon(static_cast<G4int>(nucleus->GetZ()), static_cast<G4int>(nucleus->GetA())) ->GetPDGMass();
 
 	//G4double m1 = G4ParticleTable::GetParticleTable()->GetIonTable()->GetIonMass(static_cast<G4int>(nucleus->GetZ()),
 	//static_cast<G4int>(nucleus->GetA()));

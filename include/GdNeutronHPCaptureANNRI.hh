@@ -32,14 +32,17 @@ class GdNeutronHPCaptureANNRI : public G4HadronicInteraction
 
 		virtual const std::pair<G4double, G4double> GetFatalEnergyCheckLevels() const;
 
+		void BuildPhysicsTable(const G4ParticleDefinition&);
+
+
 	private:
 
 		G4double * xSec;
 		//G4NeutronHPChannel * theCapture;
-		std::vector<G4NeutronHPChannel*> theCapture;
+		std::vector<G4NeutronHPChannel*>* theCapture;
 		G4String dirName;
 		G4int numEle;
-		//G4int it;
+		G4int it;
 		//G4String nomel;
 
 		G4int Gd_CAPTURE;

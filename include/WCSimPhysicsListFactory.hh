@@ -20,6 +20,8 @@ class WCSimPhysicsListFactory : public G4VModularPhysicsList
 
     void SetList(G4String newvalue);  // called by messenger
     void SetnCaptModel(G4String newvalue);  // called by messenger
+    void SetgdComposition(G4String newvalue);  // called by messenger
+    void SetgdCascade(G4String newvalue);  // called by messenger
     void InitializeList();
 
     //G4String GetPhysicsListName() {return PhysicsListName;}
