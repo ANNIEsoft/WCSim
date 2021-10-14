@@ -255,7 +255,8 @@ public:
   G4String GetIDCollectionName(){return WCIDCollectionName;} // ⚠
 	G4String GetIDCollectionName2(){return WCIDCollectionName2;}
 
- 
+    WCSimTuningParameters* Get_TuningParams(){return WCSimTuningParams;} 
+
 private:
 
   // Tuning parameters
@@ -275,6 +276,7 @@ private:
   //Glass, Cathode surface in PMTs
 
   G4OpticalSurface * OpGlassCathodeSurface;
+  G4OpticalSurface * OpGlassCathodeSurface_R7081;
 
   //Tyvek surface - jl145
   G4OpticalSurface * OpWaterTySurface;

@@ -26,6 +26,7 @@ WCSimDetectorConstruction::PMTMap_t WCSimDetectorConstruction::PMTLogicalVolumes
 
 G4LogicalVolume* WCSimDetectorConstruction::ConstructPMT(G4String PMTName, G4String CollectionName, G4String detectorElement)
 {
+  G4cout <<"Making PMTKey (PMTName="<<PMTName<<", CollectionName="<<CollectionName<<G4endl;
 #ifdef __CONSTRUCT_PMT_VERBOSE__
   G4cout<<"Making PMTKey_t (PMTName="<<PMTName<<", CollectionName="<<CollectionName<<") "<<G4endl;
 #endif
@@ -175,11 +176,18 @@ else {
                                  tmpGlassFaceWCPMT,
                                  solidCutOffTubs); 
 
-  G4LogicalVolume *logicGlassFaceWCPMT =
-    new G4LogicalVolume(    solidGlassFaceWCPMT,
+  G4LogicalVolume *logicGlassFaceWCPMT;
+  if (PMTName == "R7081"){
+    logicGlassFaceWCPMT = new G4LogicalVolume(solidGlassFaceWCPMT,
+				G4Material::GetMaterial("GlassR7081"),
+				CollectionName,
+				0,0,0);
+  } else {
+   logicGlassFaceWCPMT = new G4LogicalVolume(    solidGlassFaceWCPMT,
                             G4Material::GetMaterial("Glass"),
                             CollectionName,
                             0,0,0);
+  }
 
   G4VPhysicalVolume* physiGlassFaceWCPMT =
       new G4PVPlacement(0,
@@ -251,11 +259,17 @@ else {
   G4cout<<"Adding optical surfaces to cathode"<<G4endl;
 #endif
   //Add Logical Border Surface
+    if (PMTName == "R7081"){
+  new G4LogicalBorderSurface("GlassCathodeSurface_R7081",
+                             physiGlassFaceWCPMT,
+                             physiInteriorWCPMT,
+                             OpGlassCathodeSurface_R7081);
+} else {
   new G4LogicalBorderSurface("GlassCathodeSurface",
                              physiGlassFaceWCPMT,
                              physiInteriorWCPMT,
                              OpGlassCathodeSurface);
-
+}
 #ifdef __CONSTRUCT_PMT_VERBOSE__
   G4cout<<"returning logical volume"<<G4endl;
 #endif

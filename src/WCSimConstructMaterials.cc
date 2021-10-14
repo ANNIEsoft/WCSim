@@ -226,6 +226,12 @@ void WCSimDetectorConstruction::ConstructMaterials()
   //Glass->AddMaterial(Al2O3, 2.3*CLHEP::perCent);  
   //Put in 2.3 percent if the other 4 materials = 0.1 percent
 
+  G4Material *GlassR7081 = new G4Material("GlassR7081",density,4);
+  GlassR7081->AddMaterial(SiO2, 80.6*CLHEP::perCent);
+  GlassR7081->AddMaterial(B2O3, 13.0*CLHEP::perCent);
+  GlassR7081->AddMaterial(Na2O, 4.0*CLHEP::perCent);
+  GlassR7081->AddMaterial(Al2O3, 2.4*CLHEP::perCent);
+
   //---Rock
  
   //  a = 16.00*CLHEP::g/CLHEP::mole;  G4Element* elO  = new G4Element("Oxygen","O", 8,a);
@@ -491,7 +497,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
       1.34419, 1.34515, 1.3462, 1.34733, 1.34858, 1.34994, 1.35145, 1.35312,
       1.35498, 1.35707, 1.35943, 1.36211, 1.36518, 1.36872, 1.37287, 1.37776,
       1.38362, 1.39074, 1.39956, 1.41075, 1.42535};
-   
+
 
     G4double ABWFF = 1.0;
 
@@ -512,8 +518,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
         49779.6*CLHEP::cm*ABWFF, 56465.3*CLHEP::cm*ABWFF,   61830*CLHEP::cm*ABWFF, 65174.6*CLHEP::cm*ABWFF, 66143.7*CLHEP::cm*ABWFF,   
 	  64820*CLHEP::cm*ABWFF,   61635*CLHEP::cm*ABWFF, 57176.2*CLHEP::cm*ABWFF, 52012.1*CLHEP::cm*ABWFF, 46595.7*CLHEP::cm*ABWFF, 
 	41242.1*CLHEP::cm*ABWFF, 36146.3*CLHEP::cm*ABWFF, 31415.4*CLHEP::cm*ABWFF, 27097.8*CLHEP::cm*ABWFF, 23205.7*CLHEP::cm*ABWFF, 
-	19730.3*CLHEP::cm*ABWFF, 16651.6*CLHEP::cm*ABWFF, 13943.6*CLHEP::cm*ABWFF, 11578.1*CLHEP::cm*ABWFF, 9526.13*CLHEP::cm*ABWFF
-      };
+	19730.3*CLHEP::cm*ABWFF, 16651.6*CLHEP::cm*ABWFF, 13943.6*CLHEP::cm*ABWFF, 11578.1*CLHEP::cm*ABWFF, 9526.13*CLHEP::cm*ABWFF};
 
     //Xin Qian: proposed value for absorption length
     // G4double ABSORPTION_water[NUMENTRIES_water] =
@@ -596,8 +601,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
        15543*CLHEP::cm*RAYFF, 13696.6*CLHEP::cm*RAYFF, 12020.5*CLHEP::cm*RAYFF, 10504.1*CLHEP::cm*RAYFF, 9137.15*CLHEP::cm*RAYFF,
      7909.45*CLHEP::cm*RAYFF,  6811.3*CLHEP::cm*RAYFF, 5833.25*CLHEP::cm*RAYFF,  4966.2*CLHEP::cm*RAYFF, 4201.36*CLHEP::cm*RAYFF, 
      3530.28*CLHEP::cm*RAYFF, 2944.84*CLHEP::cm*RAYFF, 2437.28*CLHEP::cm*RAYFF, 2000.18*CLHEP::cm*RAYFF,  1626.5*CLHEP::cm*RAYFF, 
-     1309.55*CLHEP::cm*RAYFF, 1043.03*CLHEP::cm*RAYFF, 821.016*CLHEP::cm*RAYFF,  637.97*CLHEP::cm*RAYFF, 488.754*CLHEP::cm*RAYFF
-   };
+     1309.55*CLHEP::cm*RAYFF, 1043.03*CLHEP::cm*RAYFF, 821.016*CLHEP::cm*RAYFF,  637.97*CLHEP::cm*RAYFF, 488.754*CLHEP::cm*RAYFF};
 
    /*G4double RAYLEIGH_water[NUMENTRIES_water] = {
      167024.4*CLHEP::cm*RAYFF, 158726.7*CLHEP::cm*RAYFF, 150742*CLHEP::cm*RAYFF,
@@ -641,8 +645,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
       462688*CLHEP::cm*MIEFF,  417027*CLHEP::cm*MIEFF,  374832*CLHEP::cm*MIEFF,  335923*CLHEP::cm*MIEFF,  300125*CLHEP::cm*MIEFF,
       267267*CLHEP::cm*MIEFF,  237184*CLHEP::cm*MIEFF,  209715*CLHEP::cm*MIEFF,  184704*CLHEP::cm*MIEFF,  162000*CLHEP::cm*MIEFF, 
       141456*CLHEP::cm*MIEFF,  122931*CLHEP::cm*MIEFF,  106288*CLHEP::cm*MIEFF, 91395.2*CLHEP::cm*MIEFF,   78125*CLHEP::cm*MIEFF, 
-     66355.2*CLHEP::cm*MIEFF, 55968.2*CLHEP::cm*MIEFF, 46851.2*CLHEP::cm*MIEFF, 38896.2*CLHEP::cm*MIEFF,   32000*CLHEP::cm*MIEFF
-   };
+     66355.2*CLHEP::cm*MIEFF, 55968.2*CLHEP::cm*MIEFF, 46851.2*CLHEP::cm*MIEFF, 38896.2*CLHEP::cm*MIEFF,   32000*CLHEP::cm*MIEFF};
 
    //Mie scattering length values when assuming 10 times larger than Rayleigh scattering. 
    /*G4double MIE_water[NUMENTRIES_water] = {
@@ -685,7 +688,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
        1.600, 1.600, 1.600, 1.600, 1.600, 1.600, 1.600,
        1.600, 1.600, 1.600, 1.600, 1.600, 1.600, 1.600,
        1.600, 1.600, 1.600, 1.600, 1.600, 1.600, 1.600,
-       1.600, 1.600 }; 
+       1.600, 1.600};
 
    //G4double RINDEX_blacksheet[NUMENTRIES] =
    //{ 2.500, 2.500, 2.500, 2.500, 2.500, 2.500, 2.500,
@@ -723,7 +726,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
        1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,
        1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,
        1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,1.0e9*CLHEP::cm,
-       1.0e9*CLHEP::cm, 1.0e9*CLHEP::cm };
+       1.0e9*CLHEP::cm, 1.0e9*CLHEP::cm};
    
    G4double BLACKABS_blacksheet[NUMENTRIES_water] =
      { 1.0e-9*CLHEP::cm, 1.0e-9*CLHEP::cm, 1.0e-9*CLHEP::cm, 1.0e-9*CLHEP::cm, 1.0e-9*CLHEP::cm, 1.0e-9*CLHEP::cm, 
@@ -775,7 +778,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
        0.045*BSRFF, 0.045*BSRFF, 0.045*BSRFF, 0.045*BSRFF,
        0.045*BSRFF, 0.045*BSRFF, 0.045*BSRFF, 0.045*BSRFF,
        0.045*BSRFF, 0.045*BSRFF, 0.045*BSRFF, 0.045*BSRFF,
-       0.045*BSRFF, 0.045*BSRFF };
+       0.045*BSRFF, 0.045*BSRFF};
 
    /*
    G4double REFLECTIVITY_blacksheet[NUMENTRIES] =
@@ -841,7 +844,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
 
    G4double MIE_air_const[3]={0.99,0.99,0.8};// gforward, gbackward, forward backward ratio
 
-     
+
    //Not used yet, fictional values
    //G4double SPECULARLOBECONSTANT1[NUMENTRIES] =
    //{ 0.001, 0.001, 0.001, 0.001, 0.001, 0.001, 0.001,
@@ -884,6 +887,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
    //{ 2.038E-9*CLHEP::GeV, 4.144E-9*CLHEP::GeV };
 
    G4double PP[NUM] = { 1.4E-9*CLHEP::GeV,6.2E-9*CLHEP::GeV};
+   //G4double PP[NUM] = { 1.4E-9*CLHEP::GeV, 20.7e-09*CLHEP::GeV };
    G4double RINDEX_blacksheet[NUM] =
      { 1.6, 1.6 };
 
@@ -918,6 +922,11 @@ void WCSimDetectorConstruction::ConstructMaterials()
    */
 
 
+  OpGlassCathodeSurface_R7081 = new G4OpticalSurface("GlassCathodeSurface_R7081");
+  OpGlassCathodeSurface_R7081->SetType(dielectric_dielectric);
+  OpGlassCathodeSurface_R7081->SetModel(unified);
+  OpGlassCathodeSurface_R7081->SetFinish(polished);
+
    G4double RGCFF = 0.0;
    RGCFF = WCSimTuningParams->GetRgcff();
  
@@ -931,6 +940,10 @@ void WCSimDetectorConstruction::ConstructMaterials()
    G4double EFFICIENCY_glasscath[NUM] =
      { 0.0, 0.0 };
 
+
+   G4double RGCFFR7081 = 0.0;
+    RGCFFR7081 = WCSimTuningParams->GetRgcffR7081();
+    G4double REFLECTIVITY_glasscath_R7081[NUM] = {1.0*RGCFFR7081, 1.0*RGCFFR7081};
 
    // jl145 ----
    //
@@ -1008,7 +1021,8 @@ void WCSimDetectorConstruction::ConstructMaterials()
    myMPT5->AddProperty("RINDEX", ENERGY_water, RINDEX_glass, NUMENTRIES_water);
    myMPT5->AddProperty("ABSLENGTH",ENERGY_water, ABSORPTION_glass, NUMENTRIES_water);
    Glass->SetMaterialPropertiesTable(myMPT5);
-    
+   GlassR7081->SetMaterialPropertiesTable(myMPT5);    
+
    // jl145 ----
    // Abs legnth is same as blacksheet, very small.
    G4MaterialPropertiesTable *myMPT6 = new G4MaterialPropertiesTable();
@@ -1021,6 +1035,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
    G4double TEFLONRFF = WCSimTuningParams->GetTeflonrff();
    const G4int arrEntries = 2;
    G4double photEneSteel[] = { 1.56962*CLHEP::eV, 6.19998*CLHEP::eV };
+   //G4double photEneSteel[] = { 1.56962*CLHEP::eV, 20.7*CLHEP::eV};
    G4double rIndexSteel[] = { 1.35, 1.35};
    G4double absSteel[] = { 1.0e-9*CLHEP::cm,  1.0e-9*CLHEP::cm};
    //G4double refSteel[] = {0.5, 0.5}; // low estimate. --> replaced by tunable teflon reflectivity value (whole structure is wrapped)
@@ -1077,10 +1092,12 @@ void WCSimDetectorConstruction::ConstructMaterials()
    //Should be close to acrylic white as defined in ratpac simulation
    //Use refractive index for material 'acrylic_white' from ratpac
    G4double HOLDERRFF = WCSimTuningParams->GetHolderrff();
-   const G4int arrEntriesHolder = 62;
+   const G4int arrEntriesHolder = 61;
    G4double refHolder[] = {1.00*HOLDERRFF,1.00*HOLDERRFF};
-   G4double photEneHolder[] = {1.55*CLHEP::eV, 1.569620253*CLHEP::eV, 1.58974359*CLHEP::eV, 1.61038961*CLHEP::eV, 1.631578947*CLHEP::eV, 1.653333333*CLHEP::eV, 1.675675676*CLHEP::eV, 1.698630137*CLHEP::eV, 1.722222222*CLHEP::eV, 1.746478873*CLHEP::eV, 1.771428571*CLHEP::eV, 1.797101449*CLHEP::eV, 1.823529412*CLHEP::eV, 1.850746269*CLHEP::eV, 1.878787879*CLHEP::eV, 1.907692308*CLHEP::eV, 1.9375*CLHEP::eV, 1.968253968*CLHEP::eV, 2*CLHEP::eV, 2.032786885*CLHEP::eV, 2.066666667*CLHEP::eV, 2.101694915*CLHEP::eV, 2.137931034*CLHEP::eV, 2.175438596*CLHEP::eV, 2.214285714*CLHEP::eV, 2.254545455*CLHEP::eV, 2.296296296*CLHEP::eV, 2.339622642*CLHEP::eV, 2.384615385*CLHEP::eV, 2.431372549*CLHEP::eV, 2.48*CLHEP::eV, 2.530612245*CLHEP::eV, 2.583333333*CLHEP::eV, 2.638297872*CLHEP::eV, 2.695652174*CLHEP::eV, 2.755555556*CLHEP::eV, 2.818181818*CLHEP::eV, 2.88372093*CLHEP::eV, 2.952380952*CLHEP::eV, 3.024390244*CLHEP::eV, 3.1*CLHEP::eV, 3.179487179*CLHEP::eV, 3.263157895*CLHEP::eV, 3.351351351*CLHEP::eV, 3.444444444*CLHEP::eV, 3.542857143*CLHEP::eV, 3.647058824*CLHEP::eV, 3.757575758*CLHEP::eV, 3.875*CLHEP::eV, 4*CLHEP::eV, 4.133333333*CLHEP::eV, 4.275862069*CLHEP::eV, 4.428571429*CLHEP::eV, 4.592592593*CLHEP::eV, 4.769230769*CLHEP::eV, 4.96*CLHEP::eV, 5.166666667*CLHEP::eV, 5.391304348*CLHEP::eV, 5.636363636*CLHEP::eV, 5.904761905*CLHEP::eV, 6.2*CLHEP::eV, 20.66666667*CLHEP::eV};
-   G4double rIndexHolder[] = {1.485, 1.485, 1.485, 1.485, 1.486, 1.486, 1.486, 1.486, 1.487, 1.487, 1.487, 1.488, 1.488, 1.488, 1.488, 1.489, 1.489, 1.49, 1.49, 1.49, 1.491, 1.491, 1.492, 1.492, 1.493, 1.493, 1.494, 1.494, 1.495, 1.496, 1.496, 1.497, 1.498, 1.499, 1.499, 1.5, 1.501, 1.502, 1.503, 1.505, 1.506, 1.507, 1.509, 1.51, 1.512, 1.514, 1.516, 1.519, 1.521, 1.524, 1.527, 1.531, 1.534, 1.539, 1.544, 1.55, 1.556, 1.564, 1.573, 1.584, 1.597, 1.597};
+   G4double photEneHolder[] = {1.55*CLHEP::eV, 1.569620253*CLHEP::eV, 1.58974359*CLHEP::eV, 1.61038961*CLHEP::eV, 1.631578947*CLHEP::eV, 1.653333333*CLHEP::eV, 1.675675676*CLHEP::eV, 1.698630137*CLHEP::eV, 1.722222222*CLHEP::eV, 1.746478873*CLHEP::eV, 1.771428571*CLHEP::eV, 1.797101449*CLHEP::eV, 1.823529412*CLHEP::eV, 1.850746269*CLHEP::eV, 1.878787879*CLHEP::eV, 1.907692308*CLHEP::eV, 1.9375*CLHEP::eV, 1.968253968*CLHEP::eV, 2*CLHEP::eV, 2.032786885*CLHEP::eV, 2.066666667*CLHEP::eV, 2.101694915*CLHEP::eV, 2.137931034*CLHEP::eV, 2.175438596*CLHEP::eV, 2.214285714*CLHEP::eV, 2.254545455*CLHEP::eV, 2.296296296*CLHEP::eV, 2.339622642*CLHEP::eV, 2.384615385*CLHEP::eV, 2.431372549*CLHEP::eV, 2.48*CLHEP::eV, 2.530612245*CLHEP::eV, 2.583333333*CLHEP::eV, 2.638297872*CLHEP::eV, 2.695652174*CLHEP::eV, 2.755555556*CLHEP::eV, 2.818181818*CLHEP::eV, 2.88372093*CLHEP::eV, 2.952380952*CLHEP::eV, 3.024390244*CLHEP::eV, 3.1*CLHEP::eV, 3.179487179*CLHEP::eV, 3.263157895*CLHEP::eV, 3.351351351*CLHEP::eV, 3.444444444*CLHEP::eV, 3.542857143*CLHEP::eV, 3.647058824*CLHEP::eV, 3.757575758*CLHEP::eV, 3.875*CLHEP::eV, 4*CLHEP::eV, 4.133333333*CLHEP::eV, 4.275862069*CLHEP::eV, 4.428571429*CLHEP::eV, 4.592592593*CLHEP::eV, 4.769230769*CLHEP::eV, 4.96*CLHEP::eV, 5.166666667*CLHEP::eV, 5.391304348*CLHEP::eV, 5.636363636*CLHEP::eV, 5.904761905*CLHEP::eV, 6.2*CLHEP::eV};
+//, 20.66666667*CLHEP::eV}; //60nm
+   G4double rIndexHolder[] = {1.485, 1.485, 1.485, 1.485, 1.486, 1.486, 1.486, 1.486, 1.487, 1.487, 1.487, 1.488, 1.488, 1.488, 1.488, 1.489, 1.489, 1.49, 1.49, 1.49, 1.491, 1.491, 1.492, 1.492, 1.493, 1.493, 1.494, 1.494, 1.495, 1.496, 1.496, 1.497, 1.498, 1.499, 1.499, 1.5, 1.501, 1.502, 1.503, 1.505, 1.506, 1.507, 1.509, 1.51, 1.512, 1.514, 1.516, 1.519, 1.521, 1.524, 1.527, 1.531, 1.534, 1.539, 1.544, 1.55, 1.556, 1.564, 1.573, 1.584, 1.597};
+//, 1.597}; //60nm
 
    G4MaterialPropertiesTable *holderSurfaceMatProps = new G4MaterialPropertiesTable();
    holderSurfaceMatProps->AddProperty("RINDEX", photEneHolder, rIndexHolder, arrEntriesHolder);
@@ -1120,7 +1137,6 @@ void WCSimDetectorConstruction::ConstructMaterials()
    LUXHolderOpSurface->SetSigmaAlpha(0.1);
    LUXHolderOpSurface->SetMaterialPropertiesTable(luxholderSurfaceMatProps);
 
-
    //	------------- Surfaces --------------
 
    // Blacksheet
@@ -1143,6 +1159,12 @@ void WCSimDetectorConstruction::ConstructMaterials()
    myST2->AddProperty("EFFICIENCY", PP, EFFICIENCY_glasscath, NUM);
    //myST2->AddProperty("ABSLENGTH", PP, abslength_paint , NUM);
    OpGlassCathodeSurface->SetMaterialPropertiesTable(myST2);
+
+   G4MaterialPropertiesTable *myST2_R7081 = new G4MaterialPropertiesTable();
+   myST2_R7081->AddProperty("RINDEX", PP, RINDEX_cathode, NUM);
+   myST2_R7081->AddProperty("REFLECTIVITY",PP,REFLECTIVITY_glasscath_R7081, NUM);
+   myST2_R7081->AddProperty("EFFICIENCY",PP,EFFICIENCY_glasscath,NUM);
+   OpGlassCathodeSurface_R7081->SetMaterialPropertiesTable(myST2_R7081);
 
    //Tyvek - jl145
    G4MaterialPropertiesTable *myST3 = new G4MaterialPropertiesTable();

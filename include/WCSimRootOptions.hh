@@ -111,12 +111,16 @@ public:
   void SetBsrff(double iBsrff) {Bsrff = iBsrff;}
   void SetAbwff(double iAbwff) {Abwff = iAbwff;}
   void SetRgcff(double iRgcff) {Rgcff = iRgcff;}
+  void SetRgcffR7081(double iRgcffR7081) {RgcffR7081 = iRgcffR7081;}
   void SetMieff(double iMieff) {Mieff = iMieff;}
   void SetTeflonrff(double iTeflonrff) {Teflonrff = iTeflonrff;}
   void SetHolderrff(double iHolderrff) {Holderrff = iHolderrff;}
   void SetHolderrffLUX(double iHolderrffLUX) {HolderrffLUX = iHolderrffLUX;}
   void SetLinerrff(double iLinerrff) {Linerrff = iLinerrff;}
   void SetHolder(bool iHolder) {Holder = iHolder;}
+  void SetQERatio(double iQERatio) {QERatio = iQERatio;}
+  void SetQERatioWB(double iQERatioWB) {QERatioWB = iQERatioWB;}
+  void SetPMTWiseQE(bool iPMTWiseQE) {PMTWiseQE = iPMTWiseQE;}
   void SetTvspacing(double iTvspacing) {Tvspacing = iTvspacing;}
   void SetTopveto(bool iTopveto) {Topveto = iTopveto;}
   //WCSimTuningParameters gets
@@ -124,12 +128,16 @@ public:
   double GetBsrff() {return Bsrff;}
   double GetAbwff() {return Abwff;}
   double GetRgcff() {return Rgcff;}
+  double GetRgcffR7081() {return RgcffR7081;}
   double GetMieff() {return Mieff;}
   double GetTeflonrff() {return Teflonrff;}
   double GetLinerrff() {return Linerrff;}
   double GetHolderrff() {return Holderrff;}
   double GetHolderrffLUX() {return HolderrffLUX;}
   bool GetHolder() {return Holder;}
+  double GetQERatio() {return QERatio;}
+  double GetQERatioWB() {return QERatioWB;}
+  double GetPMTWiseQE() {return PMTWiseQE;}
   double GetTvspacing() {return Tvspacing;}
   bool   GetTopveto() {return Topveto;}
   //WCSimPhysicsListFactory sets
@@ -198,12 +206,16 @@ private:
   double Bsrff;
   double Abwff;
   double Rgcff;
+  double RgcffR7081;
   double Mieff;
   double Teflonrff;
   double Linerrff;
   double Holderrff;
   double HolderrffLUX;
   bool Holder;
+  double QERatio;
+  double QERatioWB;
+  bool PMTWiseQE;
   double Tvspacing;
   bool   Topveto;
 

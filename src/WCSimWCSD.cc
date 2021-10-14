@@ -1,4 +1,6 @@
 #include "WCSimWCSD.hh"
+#include "WCSimTuningParameters.hh"
+#include "WCSimDetectorConstruction.hh"
 #include "G4ParticleTypes.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4TouchableHistory.hh"
@@ -14,6 +16,8 @@
 
 #include <sstream>
 #include <limits>
+#include <iostream>
+#include <fstream>
 
 #include "WCSimDetectorConstruction.hh"
 #include "WCSimTrackInformation.hh"
@@ -33,6 +37,10 @@ WCSimWCSD::WCSimWCSD(G4String CollectionName, G4String name,WCSimDetectorConstru
   fdet = myDet;
   
   HCID = -1;
+
+  WCSimTuningParameters *tuning = (WCSimTuningParameters*) fdet->Get_TuningParams();
+  G4bool pmtwiseqe = tuning->GetPMTwiseQE();
+  if (pmtwiseqe) ReadInPMTWiseQE();
 }
 
 WCSimWCSD::~WCSimWCSD() {}
@@ -79,9 +87,44 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
   G4float  stepEnergy  = aStep->GetTrack()->GetTotalEnergy()/CLHEP::eV;
   G4float  wavelength  = (stepEnergy>std::numeric_limits<float>::min()) ? (2.0*M_PI*197.3)/(stepEnergy) : 0;
   
+  // Get PMT ID before calculating the QE (PMT-by-PMT QE values)
+  // ==========================================================
+  G4StepPoint*       preStepPoint = aStep->GetPreStepPoint();
+   G4TouchableHandle  theTouchable = preStepPoint->GetTouchableHandle();
+   std::stringstream tubeTag;
+   for (G4int i = theTouchable->GetHistoryDepth()-1 ; i >= 0; i--){
+     tubeTag << ":" << theTouchable->GetVolume(i)->GetName();
+     tubeTag << "-" << theTouchable->GetCopyNumber(i);
+   }
+   G4int replicaNumber;
+   if(isPMT){
+     if(detectorElement=="tank"){
+       replicaNumber = WCSimDetectorConstruction::GetTubeID(tubeTag.str());
+     }
+   }
+
   // Determine from QE whether to reject the hit
   // ===========================================
   G4float ratio = 1.;
+  WCSimTuningParameters *tuning = (WCSimTuningParameters*) fdet->Get_TuningParams();
+  bool pmtwiseqe = tuning->GetPMTwiseQE();
+  double pmtwiseratio=1.;
+  //G4cout <<"replicaNumber: "<<replicaNumber<<G4endl;
+  //G4cout <<"replicaNumber < 133: "<<(replicaNumber<133)<<G4endl;
+  if (pmtwiseqe && detectorElement=="tank" && replicaNumber<133 && replicaNumber>0) pmtwiseratio = vector_pmtqe.at(replicaNumber-1);
+
+  G4double QEratio = tuning->GetQERatio();
+  G4double QEratioWB = tuning->GetQERatioWB();
+  //G4cout <<"QERatio: "<<QEratio<<", QEratioWB: "<<QEratioWB<<G4endl;
+  //G4cout <<"volumeName: "<<volumeName<<", replicaNumber: "<<replicaNumber<<", pmtwiseratio: "<<pmtwiseratio<<G4endl;
+  if (volumeName == "ANNIEp2v7-glassFaceWCPMT_R7081" || volumeName == "ANNIEp2v7-glassFaceWCPMT_R7081HQE" || volumeName == "ANNIEp2v7-glassFaceWCPMT_D784KFLB"){
+    ratio = QEratioWB;
+  } else { 
+    ratio = QEratio;
+  }
+  ratio *= pmtwiseratio;
+  //G4cout <<"ratio: "<<ratio<<G4endl; 
+  //G4cout <<"QEratio: "<<QEratio<<G4endl;
   G4float maxQE;
   G4float photonQE;
   if(isPMT){
@@ -89,14 +132,16 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     if (fdet->GetPMT_QE_Method()==1){
       photonQE = 1.1;
     }else if (fdet->GetPMT_QE_Method()==2){
-      maxQE = fdet->GetPMTQE(volumeName,wavelength,0,240,660,ratio);
+      maxQE = fdet->GetPMTQE(volumeName,wavelength,0,240,660,QEratio);
       photonQE = fdet->GetPMTQE(volumeName, wavelength,1,240,660,ratio);
       photonQE = photonQE/maxQE;
     }else if (fdet->GetPMT_QE_Method()==3){
-      ratio = 1./(1.-0.25);
+      //ratio = 1./(1.-0.25);
+      //ratio = 1.;
       photonQE = fdet->GetPMTQE(volumeName, wavelength,1,240,660,ratio);
     }else if (fdet->GetPMT_QE_Method()==4){
-      maxQE = fdet->GetPMTQE(fdet->GetIDCollectionName(), wavelength,0,240,660,ratio);
+      //maxQE = fdet->GetPMTQE(fdet->GetIDCollectionName(), wavelength,0,240,660,ratio);
+      maxQE = fdet->GetPMTQE(fdet->GetIDCollectionName(), wavelength,0,240,660,QEratio);
       if(maxQE==0){
         G4cerr<<"MAXQE FOR PHOTON HIT ON VOLUME "<<volumeName<<" IS 0!!"<<G4endl;
         return false;
@@ -109,14 +154,13 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     if (fdet->GetLAPPD_QE_Method()==1){
       photonQE = 1.1;
     }else if (fdet->GetLAPPD_QE_Method()==2){
-      maxQE = fdet->GetLAPPDQE(volumeName,wavelength,0,240,660,ratio);
+      maxQE = fdet->GetLAPPDQE(volumeName,wavelength,0,240,660,QEratio);
       photonQE = fdet->GetLAPPDQE(volumeName, wavelength,1,240,660,ratio);
       photonQE = photonQE/maxQE;
     }else if (fdet->GetLAPPD_QE_Method()==3){
-      ratio = 1./(1.-0.25);
       photonQE = fdet->GetLAPPDQE(volumeName, wavelength,1,240,660,ratio);
     }else if (fdet->GetLAPPD_QE_Method()==4){
-      maxQE = fdet->GetPMTQE(fdet->GetIDCollectionName(), wavelength,0,240,660,ratio);
+      maxQE = fdet->GetPMTQE(fdet->GetIDCollectionName(), wavelength,0,240,660,QEratio);
       if(maxQE==0){
         G4cerr<<"MAXQE FOR PHOTON HIT ON VOLUME "<<volumeName<<" IS 0!!"<<G4endl;
         return false;
@@ -134,8 +178,8 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
     
     // Get the sensor position and orientation
     // ---------------------------------------
-    G4StepPoint*       preStepPoint = aStep->GetPreStepPoint();
-    G4TouchableHandle  theTouchable = preStepPoint->GetTouchableHandle();
+    //G4StepPoint*       preStepPoint = aStep->GetPreStepPoint();
+    //G4TouchableHandle  theTouchable = preStepPoint->GetTouchableHandle();
     G4VPhysicalVolume* thePhysical  = theTouchable->GetVolume();
     
     G4ThreeVector worldPosition = preStepPoint->GetPosition();
@@ -204,12 +248,12 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
       // Make the sensor tubeTag based on the replica numbers
       // Then use the tubeTag to get the tube ID
       // See WCSimDetectorConstruction::DescribeAndRegisterPMT() for tag construction.
-      std::stringstream tubeTag;
+     /* std::stringstream tubeTag;
       for (G4int i = theTouchable->GetHistoryDepth()-1 ; i >= 0; i--){
         tubeTag << ":" << theTouchable->GetVolume(i)->GetName();
         tubeTag << "-" << theTouchable->GetCopyNumber(i);
       }
-      G4int replicaNumber;
+      G4int replicaNumber;*/
       if(isPMT){
         if(detectorElement=="tank"){
           replicaNumber = WCSimDetectorConstruction::GetTubeID(tubeTag.str());
@@ -297,3 +341,15 @@ void WCSimWCSD::EndOfEvent(G4HCofThisEvent*)
   }
 }
 
+void WCSimWCSD::ReadInPMTWiseQE(){
+
+   std::ifstream pmtqefile("../WCSim/pmt_qe.txt");
+   double temp_qe;
+   while (!pmtqefile.eof()){
+     pmtqefile >> temp_qe;
+     vector_pmtqe.push_back(temp_qe);
+     if (pmtqefile.eof()) break;
+   }
+   pmtqefile.close();
+
+ }

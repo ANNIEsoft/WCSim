@@ -31,6 +31,7 @@ private:
   G4UIcmdWithADouble* Bsrff;
   G4UIcmdWithADouble* Abwff;
   G4UIcmdWithADouble* Rgcff;
+  G4UIcmdWithADouble* RgcffR7081;
   G4UIcmdWithADouble* Mieff;
 
   //ANNIE commands
@@ -39,6 +40,9 @@ private:
   G4UIcmdWithADouble* Holderrff;
   G4UIcmdWithADouble* HolderrffLUX;
   G4UIcmdWithABool *Holder;
+  G4UIcmdWithADouble* Qeratio;
+  G4UIcmdWithADouble* QeratioWB;
+  G4UIcmdWithABool *PMTwiseQE;
 
   //For Top Veto - jl145
   G4UIcmdWithADouble* TVSpacing;

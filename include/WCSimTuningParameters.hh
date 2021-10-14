@@ -24,6 +24,9 @@ public:
   G4double GetRgcff() {return rgcff;}
   void SetRgcff(G4double rparam) {rgcff=rparam;}
 
+  G4double GetRgcffR7081() {return rgcffr7081;}
+  void SetRgcffR7081(G4double rparam) {rgcffr7081 = rparam;}
+
   G4double GetMieff() {return mieff;}
   void SetMieff(G4double rparam) {mieff=rparam;}
 
@@ -42,6 +45,16 @@ public:
 
   G4bool GetHolder() {return holder;}
   void SetHolder(G4double hparam) {holder=hparam;}
+
+  G4double GetQERatio() {return QEratio;}
+  void SetQERatio(G4double qeratio) {QEratio = qeratio;}
+
+  G4double GetQERatioWB() {return QEratioWB;}
+  void SetQERatioWB(G4double qeratiowb) {QEratioWB = qeratiowb;}
+
+  G4bool GetPMTwiseQE() {return PMTWiseQE;}
+  void SetPMTwiseQE(G4double pmtwiseqe) {PMTWiseQE = pmtwiseqe;}
+
 
   //For Top Veto - jl145
   G4double GetTVSpacing() {return tvspacing;}
@@ -64,6 +77,7 @@ private:
   G4double bsrff;
   G4double abwff;
   G4double rgcff;
+  G4double rgcffr7081;
   G4double mieff;
 
   // ANNIE-specfic tuning parameters
@@ -72,6 +86,9 @@ private:
   G4double holderrfflux;   //LUX/ETEL holders --> Reflectivity tuning factor
   G4double linerrff;    //Liner --> Reflectivity tuning factor
   G4bool holder;        //Should ANNIE PMT holders be implemented in the simulation?
+  G4double QEratio;	//Factor by which the PMT Q.E. can be scaled
+  G4double QEratioWB;	//Factor by which the WB PMT Q.E. can be scaled
+  G4bool PMTWiseQE;	//Should each PMT have its own Q.E. scaling?
 
   //For Top Veto - jl145
   G4double tvspacing;

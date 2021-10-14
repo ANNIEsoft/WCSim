@@ -134,10 +134,12 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIECylinderScan()
 	// and also some other volumes to make the edges light tight
 	//-----------------------------------------------------------
 	
-	G4double annulusBlackSheetRmax[2] = {(WCIDRadius+WCBlackSheetThickness),
-										  WCIDRadius+WCBlackSheetThickness};
-	G4double annulusBlackSheetRmin[2] = {(WCIDRadius),
-										  WCIDRadius};
+	G4double BlackSheetRadius = WCIDRadius + 3*cm;
+
+	G4double annulusBlackSheetRmax[2] = {(BlackSheetRadius+WCBlackSheetThickness),
+										  BlackSheetRadius+WCBlackSheetThickness};
+	G4double annulusBlackSheetRmin[2] = {(BlackSheetRadius),
+										  BlackSheetRadius};
 	mainAnnulusHeight = WCIDHeight -2.*WCBarrelPMTOffset;
 	mainAnnulusHeight += 30*cm;	//WCBlackSheet needs to extend to above ETEL holders and below LUX housings to match reality
 	G4double mainAnnulusZ[2] = {-mainAnnulusHeight/2., mainAnnulusHeight/2};
@@ -166,7 +168,7 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIECylinderScan()
 						  false,
 						  0,true);
 	G4cout<<"Constructed barrel cell blacksheet with radius "<<WCIDRadius<<" to "<<(WCIDRadius+WCBlackSheetThickness)<<G4endl;
-	WCCylInfo[2]=WCIDRadius/10.;
+	WCCylInfo[2]=BlackSheetRadius/10.;
 	
 	G4LogicalBorderSurface * WaterBSBarrelCellSurface 
 		= new G4LogicalBorderSurface("WaterBSBarrelCellSurface",
@@ -357,10 +359,12 @@ void WCSimDetectorConstruction::ConstructANNIECapsSheet(G4int zflip)
 	// ---------------------Add cap blacksheet----------------------------
 	// -------------------------------------------------------------------
 	
+	G4double BlackSheetRadius = WCIDRadius + 3*cm;
+
 	G4double capBlackSheetZ[2] = {-WCBlackSheetThickness*zflip, 0.};
 	G4double capBlackSheetRmin[2] = {0., 0.};
-	G4double capBlackSheetRmax[2] = {WCIDRadius+WCBlackSheetThickness, 
-									 WCIDRadius+WCBlackSheetThickness};
+	G4double capBlackSheetRmax[2] = {BlackSheetRadius+WCBlackSheetThickness, 
+									 BlackSheetRadius+WCBlackSheetThickness};
 	G4VSolid* solidWCCapBlackSheet;
 	if(WCBarrelRingNPhi*WCPMTperCellHorizontal == WCBarrelNumPMTHorizontal){
 		solidWCCapBlackSheet

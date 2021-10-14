@@ -188,7 +188,7 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIE()
 		//                 General Tank Construction
 		//============================================================
 		if(WCDetectorName=="ANNIEp2v6") waterTank_log = ConstructANNIECylinder();
-		else if(WCDetectorName="ANNIEp2v7") waterTank_log = ConstructANNIECylinderScan();
+		else if(WCDetectorName=="ANNIEp2v7") waterTank_log = ConstructANNIECylinderScan();
 		else  waterTank_log = ConstructCylinder();
 		//rotm->rotateZ(22.5*deg);
 		G4cout << "Putting tank at y_offset = "<<-tankyoffset<<", z_offset = "<<tankouterRadius+tankzoffset<<G4endl;

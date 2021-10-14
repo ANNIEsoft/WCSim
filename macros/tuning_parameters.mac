@@ -7,13 +7,19 @@
 /WCSim/tuning/mieff 0.0
 
 # ANNIE tuning parameters
-/WCSim/tuning/teflonrff 0.90		#default: 0.90
+/WCSim/tuning/teflonrff 1.00		#default: 1.00
 /WCSim/tuning/holderrff 0.90		#default: 0.90
 /WCSim/tuning/holderrfflux 0.70		#default: 0.70
 /WCSim/tuning/linerrff 0.87		#default: 0.87
+/WCSim/tuning/QEratio 1.40		#default: 1.40
+/WCSim/tuning/rgcffr7081 0.32		#default: 0.32
+/WCSim/tuning/QEratioWB 1.00		#default: 1.00
 
 #Turning holders on (1) or off (0)
 /WCSim/tuning/holder 1
+
+#Turning PMT-wise Q.E. on (1) or off (0)
+ /WCSim/tuning/PMTwiseQE 1
 
 # Parameters to set up Top Veto - jl145
 # Set to "1" to turn on top veto.

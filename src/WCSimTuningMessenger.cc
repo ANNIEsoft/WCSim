@@ -32,6 +32,11 @@ WCSimTuningMessenger::WCSimTuningMessenger(WCSimTuningParameters* WCTuningPars):
   Rgcff->SetParameterName("Rgcff",true);
   Rgcff->SetDefaultValue(0.32);
 
+  RgcffR7081 = new G4UIcmdWithADouble("/WCSim/tuning/rgcffr7081",this);
+  RgcffR7081->SetGuidance("Set the cathode reflectivity parameter (R7081)");
+  RgcffR7081->SetParameterName("RgcffR7081",true);
+  RgcffR7081->SetDefaultValue(0.32);
+
   Mieff = new G4UIcmdWithADouble("/WCSim/tuning/mieff",this);
   Mieff->SetGuidance("Set the Mie scattering parameter");
   Mieff->SetParameterName("Mieff",true);
@@ -62,6 +67,21 @@ WCSimTuningMessenger::WCSimTuningMessenger(WCSimTuningParameters* WCTuningPars):
   Holder->SetParameterName("Holder",true);
   Holder->SetDefaultValue(0);
 
+  Qeratio = new G4UIcmdWithADouble("/WCSim/tuning/QEratio",this);
+  Qeratio->SetGuidance("Set QE tuning factor");
+  Qeratio->SetParameterName("Qeratio",true);
+  Qeratio->SetDefaultValue(1.00);
+
+  QeratioWB = new G4UIcmdWithADouble("/WCSim/tuning/QEratioWB",this);
+  QeratioWB->SetGuidance("Set QE tuning factor (WB)");
+  QeratioWB->SetParameterName("QeratioWB",true);
+  QeratioWB->SetDefaultValue(1.00);
+
+  PMTwiseQE = new G4UIcmdWithABool("/WCSim/tuning/PMTwiseQE",this);
+  PMTwiseQE->SetGuidance("Turn on/off PMT-wise tuning factors");
+  PMTwiseQE->SetParameterName("PMTwiseQE",true);
+  PMTwiseQE->SetDefaultValue(0);
+
   //jl145 - for Top Veto
   TVSpacing = new G4UIcmdWithADouble("/WCSim/tuning/tvspacing",this);
   TVSpacing->SetGuidance("Set the Top Veto PMT Spacing, in cm.");
@@ -81,6 +101,7 @@ WCSimTuningMessenger::~WCSimTuningMessenger()
   delete Bsrff;
   delete Abwff;
   delete Rgcff;
+  delete RgcffR7081;
   delete Mieff;
 
   //ANNIE-specific variables
@@ -89,6 +110,10 @@ WCSimTuningMessenger::~WCSimTuningMessenger()
   delete HolderrffLUX;
   delete Linerrff;
   delete Holder;
+  delete Qeratio;
+  delete QeratioWB;
+  delete PMTwiseQE;
+
 
   //jl145 - for Top Veto
   delete TVSpacing;
@@ -137,6 +162,13 @@ void WCSimTuningMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
   WCSimTuningParams->SetRgcff(Rgcff->GetNewDoubleValue(newValue));
 
   printf("Setting cathode reflectivity parameter %f\n",Rgcff->GetNewDoubleValue(newValue));
+
+  }
+
+  if (command == RgcffR7081) {
+
+    WCSimTuningParams->SetRgcffR7081(RgcffR7081->GetNewDoubleValue(newValue));
+    printf("Setting cathode reflectivity parameter (R7081) %f\n",RgcffR7081->GetNewDoubleValue(newValue));
 
   }
 
@@ -202,6 +234,34 @@ void WCSimTuningMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
     else
       printf("Setting ANNIE PMT holders Off\n");
   }
+
+  // ANNIE - Q.E. Ratio factor
+  else if (command == Qeratio){
+    //Set tuning factor for the Q.E. values
+    WCSimTuningParams->SetQERatio(Qeratio->GetNewDoubleValue(newValue));
+
+    printf("Setting ANNIE Q.E. ratio factor %f\n",Qeratio->GetNewDoubleValue(newValue));
+
+  }
+
+  // ANNIE - Q.E. Ratio factor for Watchboy tubes
+  else if (command == QeratioWB){
+    //Set tuning factor for Q.E. values (WB)
+    WCSimTuningParams->SetQERatioWB(QeratioWB->GetNewDoubleValue(newValue));
+
+    printf("Setting WB Q.E. ratio factor %f\n",QeratioWB->GetNewDoubleValue(newValue));
+  }
+
+  // ANNIE - Setting individual PMT-wise Q.E. factors
+  else if (command == PMTwiseQE){
+     //Set individual PMT-wise Q.E. values
+     WCSimTuningParams->SetPMTwiseQE(PMTwiseQE->GetNewBoolValue(newValue));
+     if (PMTwiseQE->GetNewBoolValue(newValue))
+       printf("Turning PMT-wise QE tuning On\n");
+     else
+       printf("Turning PMT-wise QE tuning Off\n");
+   }
+
 
   //jl145 - For Top Veto
 
