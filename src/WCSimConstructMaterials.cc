@@ -231,6 +231,12 @@ void WCSimDetectorConstruction::ConstructMaterials()
   //Glass->AddMaterial(Al2O3, 2.3*CLHEP::perCent);  
   //Put in 2.3 percent if the other 4 materials = 0.1 percent
 
+  G4Material *GlassR7081 = new G4Material("GlassR7081",density,4);
+  GlassR7081->AddMaterial(SiO2, 80.6*CLHEP::perCent);
+  GlassR7081->AddMaterial(B2O3, 13.0*CLHEP::perCent);
+  GlassR7081->AddMaterial(Na2O, 4.0*CLHEP::perCent);
+  GlassR7081->AddMaterial(Al2O3, 2.4*CLHEP::perCent);
+
   //---Rock
  
   //  a = 16.00*CLHEP::g/CLHEP::mole;  G4Element* elO  = new G4Element("Oxygen","O", 8,a);
@@ -568,6 +574,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
     G4double ENERGYRAT[NUMENTRIESRAT] = 
     {1.55E+00*CLHEP::eV, 1.65E+00*CLHEP::eV, 1.77E+00*CLHEP::eV, 1.91E+00*CLHEP::eV, 2.07E+00*CLHEP::eV, 2.25E+00*CLHEP::eV, 2.48E+00*CLHEP::eV, 2.76E+00*CLHEP::eV, 3.10E+00*CLHEP::eV, 3.54E+00*CLHEP::eV, 4.13E+00*CLHEP::eV, 4.96E+00*CLHEP::eV, 6.20E+00*CLHEP::eV, 2.07E+01*CLHEP::eV};
 
+
     G4double ABWFF = 1.0;
 
     // Get from the tuning parameters
@@ -838,6 +845,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
        1.600, 1.600};
      for (int i_array=0; i_array < NUMENTRIES_water; i_array++) RINDEX_glass[i_array] = dummy[i_array];
     }
+
 
    //G4double RINDEX_blacksheet[NUMENTRIES] =
    //{ 2.500, 2.500, 2.500, 2.500, 2.500, 2.500, 2.500,
@@ -1181,6 +1189,11 @@ void WCSimDetectorConstruction::ConstructMaterials()
 
 
 
+  OpGlassCathodeSurface_R7081 = new G4OpticalSurface("GlassCathodeSurface_R7081");
+  OpGlassCathodeSurface_R7081->SetType(dielectric_dielectric);
+  OpGlassCathodeSurface_R7081->SetModel(unified);
+  OpGlassCathodeSurface_R7081->SetFinish(polished);
+
    G4double RGCFF = 0.0;
    RGCFF = WCSimTuningParams->GetRgcff();
  
@@ -1194,6 +1207,10 @@ void WCSimDetectorConstruction::ConstructMaterials()
    G4double EFFICIENCY_glasscath[NUM] =
      { 0.0, 0.0 };
 
+
+   G4double RGCFFR7081 = 0.0;
+    RGCFFR7081 = WCSimTuningParams->GetRgcffR7081();
+    G4double REFLECTIVITY_glasscath_R7081[NUM] = {1.0*RGCFFR7081, 1.0*RGCFFR7081};
 
 
    // jl145 ----
@@ -1280,6 +1297,7 @@ void WCSimDetectorConstruction::ConstructMaterials()
    myMPT5->AddProperty("RINDEX", ENERGY_water, RINDEX_glass, NUMENTRIES_water);
    myMPT5->AddProperty("ABSLENGTH",ENERGY_water, ABSORPTION_glass, NUMENTRIES_water);
    Glass->SetMaterialPropertiesTable(myMPT5);
+   GlassR7081->SetMaterialPropertiesTable(myMPT5);    
 
    // jl145 ----
    // Abs legnth is same as blacksheet, very small.
@@ -1418,6 +1436,11 @@ void WCSimDetectorConstruction::ConstructMaterials()
    //myST2->AddProperty("ABSLENGTH", PP, abslength_paint , NUM);
    OpGlassCathodeSurface->SetMaterialPropertiesTable(myST2);
 
+   G4MaterialPropertiesTable *myST2_R7081 = new G4MaterialPropertiesTable();
+   myST2_R7081->AddProperty("RINDEX", PP, RINDEX_cathode, NUM);
+   myST2_R7081->AddProperty("REFLECTIVITY",PP,REFLECTIVITY_glasscath_R7081, NUM);
+   myST2_R7081->AddProperty("EFFICIENCY",PP,EFFICIENCY_glasscath,NUM);
+   OpGlassCathodeSurface_R7081->SetMaterialPropertiesTable(myST2_R7081);
 
    //Tyvek - jl145
    G4MaterialPropertiesTable *myST3 = new G4MaterialPropertiesTable();

@@ -340,8 +340,9 @@ void WCSimWCDigitizerSKI::DigitizeHits(WCSimWCDigitsCollection* WCHCPMT) {
 	  //Make digit here
 	  if(MakeDigit) {
 	    int iflag;
-	    WCSimWCDigitizerSKI::Threshold(peSmeared,iflag);
-
+	    //WCSimWCDigitizerSKI::Threshold(peSmeared,iflag);
+	    //G4cout <<"peSmeared: "<<peSmeared <<", iflag: "<<iflag<<G4endl;
+            iflag = 0;
 	    //Check if previous hit passed the threshold.  If so we will digitize the hit
 #ifdef WCSIMWCDIGITIZER_VERBOSE
 	    numdigitsrequested++;
@@ -403,7 +404,8 @@ void WCSimWCDigitizerSKI::DigitizeHits(WCSimWCDigitsCollection* WCHCPMT) {
 	    //as the loop will not evaluate again
 	    if(ip+1 == (*WCHCPMT)[i]->GetTotalPe()) {
 	      int iflag;
-	      WCSimWCDigitizerSKI::Threshold(peSmeared,iflag);
+	      //WCSimWCDigitizerSKI::Threshold(peSmeared,iflag);
+              iflag=0;
 	      if(iflag == 0) {
 		//digitize hit
 		peSmeared *= efficiency;

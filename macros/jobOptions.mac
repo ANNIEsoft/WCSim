@@ -14,5 +14,7 @@
 #/WCSim/physics/list LBE # preferred for low-background experiments.  
 #/WCSim/physics/list RATPAC # Same physics list configuration as in ANNIE-RATPAC. Mainly implemented for consistency checks
 /WCSim/physics/list FTFP_BERT_HP # recommended for high energy physics and hadron production up to beam momentum of several tens of GeV/c. : ANNIE: added _HP since we're interested in Gd captures!
-
+/WCSim/physics/nCapture ANNRI #options: Default, HP, Rad, GLG4Sim, ANNRI
+/WCSim/physics/GdComposition Natural #options: Natural, 157Gd-enr, 155Gd-enr
+/WCSim/physics/GdCascade PeakAndCont #options: PeakAndCont, Peak, Cont
 

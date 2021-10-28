@@ -102,7 +102,7 @@ WCSimDetectorConstruction::WCSimDetectorConstruction(G4int DetConfig,WCSimTuning
   //-----------------------------------------------------
   SetPMT_QE_Method(1);
 
-   //default is to use collection efficiency
+  //default is to use collection efficiency
   SetPMT_Coll_Eff(1);
   SetLAPPD_QE_Method(1);
   SetLAPPD_Coll_Eff(1);

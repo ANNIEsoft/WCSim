@@ -23,6 +23,9 @@ private:
 
   G4UIdirectory*      WCSimDir;
   G4UIcmdWithAString* physListCmd;
+  G4UIcmdWithAString* nCaptureModelCmd;
+  G4UIcmdWithAString* gdCompositionCmd;
+  G4UIcmdWithAString* gdCascadeCmd;
 
 };
 

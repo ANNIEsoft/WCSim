@@ -7,6 +7,8 @@ setup_annie_g410()
   source /grid/fermiapp/products/common/etc/setup
 
   #export PRODUCTS=${PRODUCTS}:/grid/fermiapp/products/larsoft
+
+
   export PRODUCTS=${PRODUCTS}:/grid/fermiapp/products/larsoft:/cvmfs/fermilab.opensciencegrid.org/products:/cvmfs/larsoft.opensciencegrid.org/products
 
   source /cvmfs/fermilab.opensciencegrid.org/products/common/etc/setup

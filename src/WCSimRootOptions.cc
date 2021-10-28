@@ -175,12 +175,16 @@ void WCSimRootOptions::Print(Option_t *) const
     << "\tBsrff: " << Bsrff << endl
     << "\tAbwff: " << Abwff << endl
     << "\tRgcff: " << Rgcff << endl
+    << "\tRgcffR7081: " << RgcffR7081 << endl
     << "\tMieff: " << Mieff << endl
     << "\tTeflonrff: " << Teflonrff << endl
     << "\tLinerrff: " << Linerrff << endl
     << "\tHolderrff: " << Holderrff << endl
     << "\tHolderrffLUX: " << HolderrffLUX << endl
     << "\tHolder: " << Holder << endl
+    << "\tQERatio: "<< QERatio << endl
+    << "\tQERatioWB: "<< QERatioWB << endl
+    << "\tPMTWiseQE: " << PMTWiseQE << endl
     << "\tTvspacing: " << Tvspacing << endl
     << "\tTopveto: " << Topveto << endl
     << "Physics List Factory:" << endl

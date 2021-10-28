@@ -1,5 +1,6 @@
 #include "WCSimStackingAction.hh"
 #include "WCSimDetectorConstruction.hh"
+#include "WCSimTuningParameters.hh"
 
 #include "G4Track.hh"
 #include "G4TrackStatus.hh"
@@ -28,6 +29,8 @@ G4ClassificationOfNewTrack WCSimStackingAction::ClassifyNewTrack
   G4ClassificationOfNewTrack classification    = fWaiting;
   G4ParticleDefinition*      particleType      = aTrack->GetDefinition();
 
+  //G4cout <<"WCIDCollectionName: "<<WCIDCollectionName<<G4endl;
+
   //return classification;        //bypass QE photon check
   
   // Make sure it is an optical photon
@@ -38,12 +41,16 @@ G4ClassificationOfNewTrack WCSimStackingAction::ClassifyNewTrack
       // only work for the range between 240 nm and 660 nm for now 
       // Even with WLS
       G4float photonWavelength = (2.0*M_PI*197.3)/(aTrack->GetTotalEnergy()/CLHEP::eV);
-      G4float ratio = 1.; //1./(1.0-0.25); ??? increase the reported QE? Why???
+      //G4float ratio = 1.; //1./(1.0-0.25); ??? increase the reported QE? Why???
+      G4float ratio=1.;
       G4float wavelengthQE = 1.1;
       
+      WCSimTuningParameters *tuning = (WCSimTuningParameters*) DetConstruct->Get_TuningParams();
+      G4double QEratio = tuning->GetQERatio();
+      ratio = QEratio;
+
       if(aTrack->GetCreatorProcess()==NULL) {
         // primary photons. I don't see why these should be treated differently... 
-        
         if (DetConstruct->GetPMT_QE_Method()!=4){
           // primary photons use PMT_QE_Method Stacking_Only
           wavelengthQE  = DetConstruct->GetPMTQE(WCIDCollectionName,photonWavelength,1,240,660,ratio);
@@ -75,7 +82,8 @@ G4ClassificationOfNewTrack WCSimStackingAction::ClassifyNewTrack
       //}
       
       // prune the photon if desired
-      if( G4UniformRand() > wavelengthQE ){ classification = fKill; }
+      if( G4UniformRand() > wavelengthQE ){ 
+       classification = fKill; }
   }
   
   return classification;

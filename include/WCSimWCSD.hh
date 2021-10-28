@@ -18,7 +18,9 @@ class WCSimWCSD : public G4VSensitiveDetector
 
   G4bool ProcessHits(G4Step*, G4TouchableHistory*);
   void   EndOfEvent(G4HCofThisEvent*);
-  
+ 
+  void   ReadInPMTWiseQE();  
+ 
  private:
 
   G4int HCID;
@@ -26,6 +28,9 @@ class WCSimWCSD : public G4VSensitiveDetector
   WCSimWCHitsCollection* hitsCollection;
   G4String detectorElement;
   std::map<int,int> PMTHitMap;   // Whether a PMT was hit already
+
+  std::vector<double> vector_pmtqe;	//Individual PMT tuning factors
+
 
 };
 
