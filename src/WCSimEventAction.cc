@@ -1751,7 +1751,6 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
   //G4cout <<"WCFV digi sumQ:"<<std::setw(4)<<wcsimrootevent->GetSumQ()<<"  ";
   //  }
   TBranch* branch = GetRunAction()->GetBranch(detectorElement);
-  branch->Print();
   branch->Fill();
 //  TFile* hfile = tree->GetCurrentFile();
 //  // MF : overwrite the trees -- otherwise we have as many copies of the tree

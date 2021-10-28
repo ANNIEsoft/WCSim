@@ -13,7 +13,7 @@
 
 WCSimPhysicsListFactory::WCSimPhysicsListFactory() :  G4VModularPhysicsList()
 {
- defaultCutValue = 1*mm;
+ defaultCutValue = 1.0*mm;
  SetVerboseLevel(0);
  
  PhysicsListName="NULL_LIST"; // default list is set in WCSimPhysicsListFactoryMessenger to FTFP_BERT
@@ -112,14 +112,16 @@ void WCSimPhysicsListFactory::InitializeList(){
     // but do not put them on the tracking stack. This is a much faster equivalent to using:
     //   ` if(particleType==G4OpticalPhoton::OpticalPhotonDefinition()) return fKill; `
     // in the UserStackingAction.
- //   opticalPhysics->SetCerenkovStackPhotons(true);
+    //opticalPhysics->SetCerenkovStackPhotons(true);
     
     // # photons produced is calculated from beta value at start of step, and has nonlinear dependence
     // limit beta change so that beta ~ constant and # photons generated is closer to correct
     opticalPhysics->SetMaxBetaChangePerStep(10.0);
     // similar to above for scintillation??
-    //opticalPhysics->SetMaxNumPhotonsPerStep(100);
-    opticalPhysics->SetMaxNumPhotonsPerStep(1);	//Smaller step size more in accordance with ratpac -> no change
+    
+    if (PhysicsListName != "RATPAC"){
+      opticalPhysics->SetMaxNumPhotonsPerStep(100);
+    } else opticalPhysics->SetMaxNumPhotonsPerStep(1);	//Smaller step size more in accordance with ratpac -> no change
 
     // prevent the stack getting too large by tracking photons first
     opticalPhysics->SetTrackSecondariesFirst(kScintillation,true);

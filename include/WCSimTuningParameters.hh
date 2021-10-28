@@ -50,6 +50,13 @@ public:
   G4bool GetTopVeto() {return topveto;}
   void SetTopVeto(G4double tparam) {topveto=tparam;}
 
+  //RATPAC comparison variables
+  void SetMaterialRAT(G4int useRAT){userat = useRAT;}
+  G4int GetMaterialRAT() {return userat;}
+
+  void SetPhotons60nm(G4int sim60nm){sim60 = sim60nm;}
+  G4int GetPhotons60nm() {return sim60;}
+
   void SaveOptionsToOutput(WCSimRootOptions * wcopt);
 
 private:
@@ -72,6 +79,10 @@ private:
   G4double holderrfflux;   //LUX/ETEL holders --> Reflectivity tuning factor
   G4double linerrff;    //Liner --> Reflectivity tuning factor
   G4bool holder;        //Should ANNIE PMT holders be implemented in the simulation?
+
+  //RATPAC comparison variables
+  G4int sim60;
+  G4int userat;
 
   //For Top Veto - jl145
   G4double tvspacing;

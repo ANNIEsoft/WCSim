@@ -7,7 +7,7 @@ setup_annie_g410()
   source /grid/fermiapp/products/common/etc/setup
 
   #export PRODUCTS=${PRODUCTS}:/grid/fermiapp/products/larsoft
-  export PRODUCTS=${PRODUCTS}:/grid/fermiapp/products/larsoft:/cvmfs/fermilab.opensciencegrid.org/products
+  export PRODUCTS=${PRODUCTS}:/grid/fermiapp/products/larsoft:/cvmfs/fermilab.opensciencegrid.org/products:/cvmfs/larsoft.opensciencegrid.org/products
 
   source /cvmfs/fermilab.opensciencegrid.org/products/common/etc/setup
 
@@ -35,7 +35,11 @@ setup -f Linux64bit+2.6-2.12 -q debug:e10:nu root v6_06_08
 #source /grid/fermiapp/products/larsoft/root/v6_04_06/Linux64bit+2.6-2.12-e9-nu-debug/bin/thisroot.sh
 source /grid/fermiapp/products/larsoft/root/v6_06_08/Linux64bit+2.6-2.12-e10-nu-debug/bin/thisroot.sh
 
-setup -f Linux64bit+2.6-2.12 -q debug:e10:r6 genie v2_12_0a
+#setup -f Linux64bit+2.6-2.12 -q debug:e10:r6 genie v2_12_0a
+#setup -f Linux64bit+2.6-2.12 -q debug:e10:r6 genie v2_12_10a
+#setup -f Linux64bit+2.6-2.12  genie v2_12_10a
+setup genie v2_12_2 -q e10:prof:r6
+
 
 #overwrite the clhep setup set by genie
 #setup -f Linux64bit+2.6-2.12 -q debug:e9 clhep v2_2_0_8

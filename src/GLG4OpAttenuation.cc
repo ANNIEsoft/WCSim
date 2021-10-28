@@ -22,7 +22,6 @@
 #include "Randomize.hh"
 #include "G4Step.hh"
 
-using namespace std;
 
         /////////////////
         // Hidden static variables and functions

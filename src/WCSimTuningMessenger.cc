@@ -73,6 +73,14 @@ WCSimTuningMessenger::WCSimTuningMessenger(WCSimTuningParameters* WCTuningPars):
   TopVeto->SetParameterName("TopVeto",true);
   TopVeto->SetDefaultValue(0);
 
+  MaterialRAT = new G4UIcmdWithABool("/WCSim/tuning/MaterialRAT",this);
+  MaterialRAT->SetGuidance("Should the RAT-specific material properties be used? Yes(1) - No (0)");
+  MaterialRAT->SetDefaultValue(0);
+
+  Photons60nm = new G4UIcmdWithABool("/WCSim/tuning/Photons60nm",this);
+  Photons60nm->SetGuidance("Should photons be simulated starting from 60nm instead of 200nm? Yes (1) - No (0)");
+  Photons60nm->SetDefaultValue(0);
+
 }
 
 WCSimTuningMessenger::~WCSimTuningMessenger()
@@ -89,6 +97,10 @@ WCSimTuningMessenger::~WCSimTuningMessenger()
   delete HolderrffLUX;
   delete Linerrff;
   delete Holder;
+
+  //Dedicated tuning variables for ratpac comparisons
+  delete MaterialRAT;
+  delete Photons60nm;
 
   //jl145 - for Top Veto
   delete TVSpacing;
@@ -219,6 +231,27 @@ void WCSimTuningMessenger::SetNewValue(G4UIcommand* command,G4String newValue)
     else
       printf("Setting Top Veto Off\n");
   }
+
+        if(command == MaterialRAT) {
+          if (MaterialRAT->GetNewBoolValue(newValue)){
+            WCSimTuningParams->SetMaterialRAT(1);
+	    printf("Setting RAT material properties");
+          }else {
+            WCSimTuningParams->SetMaterialRAT(0);
+            printf("Use default WCSim material properties");
+          }
+        }
+
+        if(command == Photons60nm) {
+          if (Photons60nm->GetNewBoolValue(newValue)){
+            WCSimTuningParams->SetPhotons60nm(1);
+            printf("Simulate photons down to 60nm");
+          }else {
+            WCSimTuningParams->SetPhotons60nm(0);
+	    printf("Simulate photons down to 200nm");
+          }
+        }
+
 
 
 }

@@ -40,6 +40,10 @@ private:
   G4UIcmdWithADouble* HolderrffLUX;
   G4UIcmdWithABool *Holder;
 
+  //RATPAC comparison commands
+  G4UIcmdWithABool* MaterialRAT;
+  G4UIcmdWithABool* Photons60nm;
+
   //For Top Veto - jl145
   G4UIcmdWithADouble* TVSpacing;
   G4UIcmdWithABool* TopVeto;

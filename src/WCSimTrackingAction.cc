@@ -68,13 +68,13 @@ void WCSimTrackingAction::PreUserTrackingAction(const G4Track* aTrack){
     if (creatorProcessName == "Cerenkov") {
 	evInfo->numCherenPhoton++;
         G4float photonWavelength = (2.0*M_PI*197.3)/(aTrack->GetTotalEnergy()/CLHEP::eV);
-        evInfo->hCher.Fill(photonWavelength);
+        //evInfo->hCher.Fill(photonWavelength);	//Comment out in case you want to create histograms of the wavelength distribution
         if (photonWavelength >= 200 && photonWavelength < 790) {
           evInfo->numCherenPhotonWCSim++;
-          evInfo->hCherWCSim.Fill(photonWavelength);
+          //evInfo->hCherWCSim.Fill(photonWavelength); //Comment out in case you want to create histograms of the wavelength distribution
           G4ThreeVector photonPosition = aTrack->GetVertexPosition();
-          evInfo->hCherXZ.Fill(photonPosition.z()/1000.,photonPosition.x()/1000.);
-          evInfo->hCherYZ.Fill(photonPosition.z()/1000.,photonPosition.y()/1000.);
+          //evInfo->hCherXZ.Fill(photonPosition.z()/1000.,photonPosition.x()/1000.);
+          //evInfo->hCherYZ.Fill(photonPosition.z()/1000.,photonPosition.y()/1000.);
         }
     }
   }

@@ -21,4 +21,5 @@
 # Set top veto PMT spacing in cm.
 /WCSim/tuning/tvspacing 100
 
-
+/WCSim/tuning/MaterialRAT 1
+/WCSim/tuning/Photons60nm 1

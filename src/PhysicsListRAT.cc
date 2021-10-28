@@ -170,9 +170,11 @@ void PhysicsListRAT::AddParameterization() {
 void PhysicsListRAT::SetCuts()
 {
   //Just for testing!!!!! Remove
+  /*
   SetCutValue(1*mm,"gamma");
   SetCutValue(1*mm,"e-");
   SetCutValue(1*mm,"e+");
+  */
 }
 
 
