@@ -19,7 +19,7 @@
 /WCSim/tuning/holder 1
 
 #Turning PMT-wise Q.E. on (1) or off (0)
- /WCSim/tuning/PMTwiseQE 1
+/WCSim/tuning/PMTwiseQE 1
 
 # Parameters to set up Top Veto - jl145
 # Set to "1" to turn on top veto.
@@ -27,5 +27,6 @@
 # Set top veto PMT spacing in cm.
 /WCSim/tuning/tvspacing 100
 
-/WCSim/tuning/MaterialRAT 1
-/WCSim/tuning/Photons60nm 1
+#RATPAC-comparison variables
+/WCSim/tuning/MaterialRAT 0	# Default: 0
+/WCSim/tuning/Photons60nm 0	# Default: 0
