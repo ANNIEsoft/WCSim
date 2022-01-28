@@ -99,6 +99,7 @@ public:
   void SetANNIEPhase2Geometryv5(); // phase 2 geometry -  alt later PMT layout
   void SetANNIEPhase2Geometryv6(); // phase 2 geometry -  entirely new Cylinder construction
   void SetANNIEPhase2Geometryv7(); // phase 2 geometry - read PMT positions from scan file
+  void SetANNIETestTankGeometry(); // a minimal tank with one LAPPD, for LAPPD simulation studies
   
   G4int    GetTotalNumPmts(G4String key){
     if(std::find(WCTankCollectionNames.begin(), WCTankCollectionNames.end(), key)!=WCTankCollectionNames.end())
@@ -299,8 +300,10 @@ private:
 
   // The Construction routines
   G4LogicalVolume* ConstructCylinder();
+  G4LogicalVolume* ConstructTestTank();
   G4LogicalVolume* ConstructANNIECylinder();
   G4LogicalVolume* ConstructANNIECylinderScan();
+  G4LogicalVolume* ConstructANNIETestTank();
   G4LogicalVolume* ConstructPMT(G4String,G4String, G4String detectorElement="tank");
   G4LogicalVolume* ConstructFlatFacedPMT(G4String PMTName, G4String CollectionName, G4String detectorElement="mrd");
   G4LogicalVolume* ConstructLAPPD(G4String,G4String);
@@ -659,6 +662,7 @@ private:
 //  private:
 
   G4bool isANNIE;
+  G4bool isLAPPDTestBox;
   G4String GDMLFilename;
   G4String GDMLInnerStructureFilename;
   G4bool addGDMLinnerstructure;

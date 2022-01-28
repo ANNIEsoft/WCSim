@@ -1012,6 +1012,93 @@ void WCSimDetectorConstruction::SetANNIEPhase2Geometryv7()
   WCLAPPDperCellVertical  = 3;        // 3 rings of LAPPDs
 }
 
+void WCSimDetectorConstruction::SetANNIETestTankGeometry()
+{
+  
+  // a steel box of half width and depth WCIDDiameter, 
+  // lined with blacksheet, with a single LAPPD placed at the origin.
+  // a dummy PMT is placed below the tank at (0,0,-WCIDHeight) just in case
+  // having no PMTs in the simulation causes problems.
+  
+  // Offsets and positioning
+  WCLength = 1.*m;                   // world extend is 3*WCLength in all dimensions
+  WCIDHeight = 2.*m;                 // the 'tank' will be a steel box of half height WCIDHeight...
+  WCIDDiameter = 2.*m;               // ... and half-width and half-depth WCIDDiameter
+  WCPosition=0.;                     // global z offset of the tank
+  
+  isANNIE=true;                      // totally lost track of what this does, but we're annie.
+  isLAPPDTestBox=true;               // use our test box geometry constructor
+  WCDetectorName = "LAPPDTestTank";  // arbitrary
+  
+  // geometry features
+  WCAddGd = false;                   // for now, let's use pure water.
+  
+  // don't these are relevant, i think i removed the calling code from this geomtetry's constructor
+  addGDMLinnerstructure = false;     // add the inner structure by reading stl file
+  doOverlapCheck = false;            // check overlaps when adding inner structure
+  constructmrd = false;              // not optional without further work, except for visualization
+  constructveto = false;             // not optional without further work, except for visualization
+  
+  // collections of PMT properties, one entry per PMT type.
+  WCTankCollectionNames.clear();
+  WCPMTNameMap.clear();
+  WCPMTRadiusMap.clear();
+  
+  // old style global PMT collection name, when there's only one type of PMT.
+  // leave it as this for annie's multiple PMT type support.
+  WCIDCollectionName="WCIDCollectionNameIsUnused";
+  
+  // added later, a vector of collection names, one entry for each type of PMT.
+  // we'll make one entry, just so it's not empty, in case that causes problems.
+  std::string WCIDCollectionName_R7081 = WCDetectorName +"-glassFaceWCPMT_R7081";
+  WCTankCollectionNames.push_back(WCIDCollectionName_R7081);
+  
+  // other hit collections
+  // we're only interested in the LAPPD one, but there are almost certainly places in the code
+  // that expect the other hit collections to exist, so make them anyway.
+  WCMRDCollectionName = WCDetectorName +"-glassFaceWCPMT_MRD";
+  WCFACCCollectionName = WCDetectorName +"-glassFaceWCPMT_FACC";
+  WCIDCollectionName2 = WCDetectorName +"-glassFaceWCONLYLAPPDS";
+  
+  // create the tank PMT type we're going to use for the dummy PMT
+  WCSimPMTObject* PMT_R7081 = CreatePMTObject("R7081", WCIDCollectionName_R7081);
+  
+  // create the LAPPD
+  WCSimLAPPDObject * lappd = CreateLAPPDObject("lappd", WCIDCollectionName2);
+  WCLAPPDName = lappd->GetLAPPDName();
+  WCLAPPDExposeHeight = lappd->GetExposeHeight();
+  WCLAPPDRadius = lappd->GetRadius();
+  
+  // transfer PMT info into some other maps used by some geometry constructors.
+  // At the least we need the name
+  G4String WCPMTName_R7081 = PMT_R7081->GetPMTName();
+  WCPMTNameMap.emplace(WCIDCollectionName_R7081, WCPMTName_R7081);
+  
+  // the rest of the info is only used in some constructors
+//  G4double WCPMTRadius_R7081 = PMT_R7081->GetRadius();
+//  WCPMTRadiusMap.emplace(WCIDCollectionName_R7081, WCPMTRadius_R7081);
+//  G4double WCPMTExposeHeight_R7081 = PMT_R7081->GetExposeHeight();
+//  WCPMTExposeHeightMap.emplace(WCIDCollectionName_R7081, WCPMTExposeHeight_R7081);
+//  
+//  // a couple more general parameters used in some old geometry constructors...
+//  WCPMTRadius = WCPMTRadius_R7081;
+//  WCPMTExposeHeight = WCPMTExposeHeight_R7081;
+//  
+  // create MRD and FACC PMT Logical volumes and get their info
+  // again the objects need to exist to instantiate the underlying hit collections
+  WCSimPMTObject* MRDPMT = CreatePMTObject("FlatFacedPMT2inch",WCMRDCollectionName);
+//  MRDPMTName = MRDPMT->GetPMTName();
+//  MRDPMTExposeHeight = MRDPMT->GetExposeHeight();
+//  MRDPMTRadius = MRDPMT->GetRadius();
+//  
+  WCSimPMTObject* FACCPMT = CreatePMTObject("FlatFacedPMT2inch",WCFACCCollectionName);
+//  FACCPMTName = FACCPMT->GetPMTName();
+//  FACCPMTExposeHeight = FACCPMT->GetExposeHeight();
+//  FACCPMTRadius = FACCPMT->GetRadius();
+  
+}
+
+
 void WCSimDetectorConstruction::SetSuperKGeometry()
 {
   WCDetectorName = "SuperK";

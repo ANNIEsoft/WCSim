@@ -240,7 +240,7 @@ void WCSimDetectorConstruction::DumpGeometryTableToFile()
 
   // (JF) Get first tube transform for filling in detector radius
   // the height is still done with WCCylInfo above
-  G4Transform3D firstTransform = tubeIDMap[2];
+  G4Transform3D firstTransform = tubeIDMap[1];
   innerradius = sqrt(pow(firstTransform.getTranslation().getX()/CLHEP::cm,2)
                             + pow(firstTransform.getTranslation().getY()/CLHEP::cm,2));
 

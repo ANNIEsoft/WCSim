@@ -83,7 +83,8 @@ WCSimDetectorConstruction::WCSimDetectorConstruction(G4int DetConfig,WCSimTuning
   //SetANNIEPhase2Geometryv4();
   //SetANNIEPhase2Geometryv5();
   //SetANNIEPhase2Geometryv6();
-  SetANNIEPhase2Geometryv7();
+  //SetANNIEPhase2Geometryv7();
+  SetANNIETestTankGeometry();
 
   //----------------------------------------------------- 
   // Set whether or not Pi0-specific info is saved
@@ -218,7 +219,9 @@ G4VPhysicalVolume* WCSimDetectorConstruction::Construct()
 
   G4LogicalVolume* logicWCBox;
   // Select between egg-shaped HyperK and cylinder
+  // isLAPPDTestBox should come before isANNIE
   if (isEggShapedHyperK) logicWCBox = ConstructEggShapedHyperK();
+  else if (isLAPPDTestBox) logicWCBox = ConstructTestTank(); // returns a 5x5x5m box MatryoshkaMother
   else if (isANNIE) logicWCBox = ConstructANNIE(); // returns a 5x5x5m box MatryoshkaMother
   else logicWCBox = ConstructCylinder();
   G4cout << " WCLength       = " << WCLength/CLHEP::m << " m"<< G4endl;
@@ -261,11 +264,6 @@ G4VPhysicalVolume* WCSimDetectorConstruction::Construct()
 
   // Water Cherenkov Detector (WC) mother volume
   // WC Box, nice to turn on for x and y views to provide a frame:
-
-	  //G4RotationMatrix* rotationMatrix = new G4RotationMatrix;
-	  //rotationMatrix->rotateX(90.*deg);
-	  //rotationMatrix->rotateZ(90.*deg);
-
   G4ThreeVector genPosition = G4ThreeVector(0., 0., WCPosition);
   G4VPhysicalVolume* physiWCBox = 
     new G4PVPlacement(0,

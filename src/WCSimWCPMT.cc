@@ -96,7 +96,8 @@ void WCSimWCPMT::Digitize()
   for(auto aWCCollectionName : WCCollectionNames){
   // Get the hit collection ID from the name
   G4int WCHCID = DigiMan->GetHitsCollectionID(aWCCollectionName);
-  WCSimWCHitsCollection* WCHC = (WCSimWCHitsCollection*)(DigiMan->GetHitsCollection(WCHCID));
+  WCSimWCHitsCollection* WCHC = nullptr;
+  if(WCHCID>0) WCHC = (WCSimWCHitsCollection*)(DigiMan->GetHitsCollection(WCHCID));
 
 #ifdef HYPER_VERBOSITY
   if(itt==0) {
