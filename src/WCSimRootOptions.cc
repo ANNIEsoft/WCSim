@@ -42,77 +42,62 @@ void WCSimRootOptions::PopulateFileVersion()
     assert(false);
   }
   
-  // we'll also retrieve the git commit hash
-  filepath = "CommitHash.txt"; // this file stores the hash of the current commit
+  // we'll also try to retrieve the git commit hash.
   CommitHash = "";
-  fin.open(filepath.c_str());
-  if(fin.is_open()){
-    std::getline(fin,CommitHash);
-    fin.close();
-    std::cout<<"Initial CommitHash.txt contents: "<<CommitHash<<std::endl;
-  } else {
-    std::cerr<<"No CommitHash.txt file found"<<std::endl;
-  }
-  // But requiring the user to keep this file up-to-date is potentially risky.
-  // We can try to update this file to the current HEAD straight from the git files.
-  // These automatically track the current commit, so are more likely to be up to date.
-  // try to see if we have the git repository and update the file if we do
-  //  (it get stripped out before submitting to the grid, so we may not have the git directory)
-  std::cout<<"Attempting to update CommitHash.txt based on git head"<<std::endl;
-  std::string command = std::string("WCSIMDIR='")+std::string(WCSIMDIR)+"' && "
+
+  // This of course relies on us having git and a git repository
+  std::string command = "which git >> /dev/null";
+  int dont_have_git = system(command.c_str());  // returns 0 if we *do* have git
+  if(dont_have_git) return;
+
+  std::cout<<"Attempting to fetch git head commit hash"<<std::endl;
+  // if we have a branch checked out then 'cat ${WCSIMDIR}/.git/HEAD' returns "ref: refs/heads/branchname"
+  // the commit hash is then stored in ${WCSIMDIR}/.git/refs/heads/branchname
+  // if we have a detached head, then 'cat ${WCSIMDIR}/.git/HEAD' returns the commit hash directly.
+  command = std::string("WCSIMDIR='")+std::string(WCSIMDIR)+"' && "
        " nfields=$(cat ${WCSIMDIR}/.git/HEAD | awk '{ print NF; }'); "
        " if [ $nfields -eq 2 ]; then "
-       "    cat ${WCSIMDIR}/.git/$(cat ${WCSIMDIR}/.git/HEAD | awk '{ print $NF; }') > CommitHashUpdate.txt;"
+       "    cat ${WCSIMDIR}/.git/$(cat ${WCSIMDIR}/.git/HEAD | awk '{ print $NF; }') > CommitHash.txt;"
        " else "
-       "    cat ${WCSIMDIR}/.git/HEAD > CommitHashUpdate.txt;"
+       "    cat ${WCSIMDIR}/.git/HEAD > CommitHash.txt;"
        " fi";
-  int fileupdated = system(command.c_str());
-  // if we have a branch checked out then 'cat ${WCSIMDIR}/.git/HEAD' returns "ref: refs/heads/branchname"
-  // the commit hash is then stored in ${WCSIMDIR}/.git/refs/heads/branchname 
-  // if we have a detached head, then 'cat ${WCSIMDIR}/.git/HEAD' returns the commit hash directly.
-  // 0 if this worked (i.e. if we could access the file in .git), not 0 otherwise.
-  if(fileupdated==0){
-    std::cout<<"Retrieved updated commit hash based on current HEAD"<<std::endl;
-    // re-read the file with the updated hash
-    fin.open("CommitHashUpdate.txt");
+  int gothash = system(command.c_str());
+  // system call returns 0 if this worked and an error code otherwise.
+  if(gothash==0){
+    std::cout<<"Retrieved HEAD commit hash"<<std::endl;
+    // read it in
+    fin.open("CommitHash.txt");
     if(fin.is_open()){
       std::string tempstring="";
       std::getline(fin,tempstring);
       if(tempstring!=""){
         CommitHash=tempstring;
-        command = std::string("WCSIMDIR='") + std::string(WCSIMDIR) +"' && "
-                  " cat CommitHashUpdate.txt > CommitHash.txt &&"
-                  " cp CommitHash.txt ${WCSIMDIR}/CommitHash.txt";
-        fileupdated = system(command.c_str());
-        if(fileupdated==0) std::cout<<"Updated CommitHash.txt"<<std::endl;
-        else std::cout<<"Will use updated commit hash, but could not update CommitHash.txt file"<<std::endl;
       } else {
-        std::cout<<"Git HEAD reported empty string; skipping CommitHash.txt update"<<std::endl;
+        std::cerr<<"Git HEAD reported empty string!"<<std::endl;
       }
       fin.close();
+    } else {
+      std::cerr<<"Failed to open tempfile 'CommitHash.txt'"<<std::endl;
     }
   } else {
-    //std::cerr<<"Update failed"<<std::endl;
+    std::cerr<<"failed to get git commit hash!"<<std::endl;
   }
   
-  // if either method succeeded, we should have a commit hash now:
   if(CommitHash!=""){
     std::cout<<"Current WCSim commit hash is: "<<CommitHash<<std::endl;
   } else {
-    std::cerr<<"Unable to read WCSim commit hash file "<<filepath
-          <<", please ensure the file exists and contains the current commit hash"<<std::endl;
+    std::cerr<<"Unable to read WCSim commit hash\n"
+             <<"Please ensure you built WCSim from a git repository"<<std::endl;
+    //       <<"If working on the grid fetch the minimum code with e.g.\n"
+    //       <<"`git clone --depth 1 --single-branch -b annie https://github.com/ANNIEsoft/WCSim.git`"<<std::endl;
+    // Hmm, this could cause grid jobs to fail if someone got their code as a zip file,
+    // but if you're running on the grid it's probably all the more important your outputs
+    // are properly git tagged. So we will fail.
     assert(false);
   }
   
-  // we could also, for completeness, check if there are any outstanding changes:
-  command = "which git >> /dev/null";
-  int dont_have_git = system(command.c_str());  // returns 0 if we *do* have git
-  if(dont_have_git) return; // can't do anything more without git
-  //command  = "(cd ${WCSIMDIR}/ && git diff --exit-code > /dev/null )";
-  //int unstaged_changes = system(command.c_str());
-  //command  = "(cd ${WCSIMDIR}/ && git diff --cached --exit-code > /dev/null )";
-  //int staged_changes = system(command.c_str());
-  //command = "(cd ${WCSIMDIR}/ && rm -f gitstatusstring.txt && git status -uno --porcelain > gitstatusstring.txt && [ -s gitstatusstring.txt ] && rm gitstatusstring.txt)";
+  // we can also warn if there are any outstanding changes, as in this case
+  // the corresponding commit may not be an accurate representation of the code
   command = std::string("(WCSIMDIR='") + std::string(WCSIMDIR) + "' && "
             " cd ${WCSIMDIR}/ && rm -f gitstatusstring.txt && "
             " git diff HEAD > gitstatusstring.txt && "
