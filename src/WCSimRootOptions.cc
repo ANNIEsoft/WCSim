@@ -56,44 +56,43 @@ void WCSimRootOptions::PopulateFileVersion()
   // But requiring the user to keep this file up-to-date is potentially risky.
   // We can try to update this file to the current HEAD straight from the git files.
   // These automatically track the current commit, so are more likely to be up to date.
-  // step 1: check if we know where the source files are
-  std::string command = "[ -z \"${WCSIMDIR}\" ]";
-  int gotsourceloc = system(command.c_str());
-  if(not gotsourceloc){
-    std::cerr<<"WARNING: WCSIMDIR environmental variable not defined!"
-             <<" Cannot check CommitHash is up-to-date!"
-             <<" Please export the source files directory to WCSIMDIR"<<std::endl;
-  } else {
-    // step 2: try to see if we have the git repository and update the file if we do
-    //  (it get stripped out before submitting to the grid, so we may not have the git directory)
-    std::cout<<"Attempting to update CommitHash.txt based on git head"<<std::endl;
-    command = "nfields=$(cat ${WCSIMDIR}/.git/HEAD | awk '{ print NF; }'); if [ $nfields -eq 2 ]; then cat ${WCSIMDIR}/.git/$(cat ${WCSIMDIR}/.git/HEAD | awk '{ print $NF; }') > CommitHashUpdate.txt; else cat ${WCSIMDIR}/.git/HEAD > CommitHashUpdate.txt; fi";
-    // if we have a branch checked out then 'cat ${WCSIMDIR}/.git/HEAD' returns "ref: refs/heads/branchname"
-    // the commit hash is then stored in ${WCSIMDIR}/.git/refs/heads/branchname 
-    // if we have a detached head, then 'cat ${WCSIMDIR}/.git/HEAD' returns the commit hash directly.
-    int fileupdated = system(command.c_str());
-    // 0 if this worked (i.e. if we could access the file in .git), not 0 otherwise.
-    if(fileupdated==0){
-      std::cout<<"Retrieved updated commit hash based on current HEAD"<<std::endl;
-      // re-read the file with the updated hash
-      fin.open("CommitHashUpdate.txt");
-      if(fin.is_open()){
-        std::string tempstring="";
-        std::getline(fin,tempstring);
-        if(tempstring!=""){
-          CommitHash=tempstring;
-          command = "cat CommitHashUpdate.txt > CommitHash.txt && cp CommitHash.txt ${WCSIMDIR}/CommitHash.txt";
-          fileupdated = system(command.c_str());
-          if(fileupdated==0) std::cout<<"Updated CommitHash.txt"<<std::endl;
-          else std::cout<<"Will use updated commit hash, but could not update CommitHash.txt file"<<std::endl;
-        } else {
-          std::cout<<"Git HEAD reported empty string; skipping CommitHash.txt update"<<std::endl;
-        }
-        fin.close();
+  // try to see if we have the git repository and update the file if we do
+  //  (it get stripped out before submitting to the grid, so we may not have the git directory)
+  std::cout<<"Attempting to update CommitHash.txt based on git head"<<std::endl;
+  std::string command = std::string("WCSIMDIR='")+std::string(WCSIMDIR)+"' && "
+       " nfields=$(cat ${WCSIMDIR}/.git/HEAD | awk '{ print NF; }'); "
+       " if [ $nfields -eq 2 ]; then "
+       "    cat ${WCSIMDIR}/.git/$(cat ${WCSIMDIR}/.git/HEAD | awk '{ print $NF; }') > CommitHashUpdate.txt;"
+       " else "
+       "    cat ${WCSIMDIR}/.git/HEAD > CommitHashUpdate.txt;"
+       " fi";
+  int fileupdated = system(command.c_str());
+  // if we have a branch checked out then 'cat ${WCSIMDIR}/.git/HEAD' returns "ref: refs/heads/branchname"
+  // the commit hash is then stored in ${WCSIMDIR}/.git/refs/heads/branchname 
+  // if we have a detached head, then 'cat ${WCSIMDIR}/.git/HEAD' returns the commit hash directly.
+  // 0 if this worked (i.e. if we could access the file in .git), not 0 otherwise.
+  if(fileupdated==0){
+    std::cout<<"Retrieved updated commit hash based on current HEAD"<<std::endl;
+    // re-read the file with the updated hash
+    fin.open("CommitHashUpdate.txt");
+    if(fin.is_open()){
+      std::string tempstring="";
+      std::getline(fin,tempstring);
+      if(tempstring!=""){
+        CommitHash=tempstring;
+        command = std::string("WCSIMDIR='") + std::string(WCSIMDIR) +"' && "
+                  " cat CommitHashUpdate.txt > CommitHash.txt &&"
+                  " cp CommitHash.txt ${WCSIMDIR}/CommitHash.txt";
+        fileupdated = system(command.c_str());
+        if(fileupdated==0) std::cout<<"Updated CommitHash.txt"<<std::endl;
+        else std::cout<<"Will use updated commit hash, but could not update CommitHash.txt file"<<std::endl;
+      } else {
+        std::cout<<"Git HEAD reported empty string; skipping CommitHash.txt update"<<std::endl;
       }
-    } else {
-      //std::cerr<<"Update failed"<<std::endl;
+      fin.close();
     }
+  } else {
+    //std::cerr<<"Update failed"<<std::endl;
   }
   
   // if either method succeeded, we should have a commit hash now:
@@ -106,24 +105,25 @@ void WCSimRootOptions::PopulateFileVersion()
   }
   
   // we could also, for completeness, check if there are any outstanding changes:
-  if(gotsourceloc){
-    command = "which git >> /dev/null";
-    int dont_have_git = system(command.c_str());  // returns 0 if we *do* have git
-    if(dont_have_git) return; // can't do anything more without git
-    //command  = "(cd ${WCSIMDIR}/ && git diff --exit-code > /dev/null )";
-    //int unstaged_changes = system(command.c_str());
-    //command  = "(cd ${WCSIMDIR}/ && git diff --cached --exit-code > /dev/null )";
-    //int staged_changes = system(command.c_str());
-    //command = "(cd ${WCSIMDIR}/ && rm -f gitstatusstring.txt && git status -uno --porcelain > gitstatusstring.txt && [ -s gitstatusstring.txt ] && rm gitstatusstring.txt)";
-    command = "(cd ${WCSIMDIR}/ && rm -f gitstatusstring.txt && git diff HEAD > gitstatusstring.txt && if [ -s gitstatusstring.txt ]; then /bin/false; fi )";
-    int any_changes = system(command.c_str());
-    if(any_changes){
-      std::cerr<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
-      std::cerr<<"WARNING: THERE ARE UNCOMMITTED CHANGES TO THE SOURCE FILES"<<std::endl;
-      std::cerr<<"    WCSimRootOptions::CommitHash WILL NOT BE ACCURATE!"<<std::endl;
-      std::cerr<<"       PLEASE COMMIT YOUR CHANGES AND REBUILD"<<std::endl;
-      std::cerr<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
-    }
+  command = "which git >> /dev/null";
+  int dont_have_git = system(command.c_str());  // returns 0 if we *do* have git
+  if(dont_have_git) return; // can't do anything more without git
+  //command  = "(cd ${WCSIMDIR}/ && git diff --exit-code > /dev/null )";
+  //int unstaged_changes = system(command.c_str());
+  //command  = "(cd ${WCSIMDIR}/ && git diff --cached --exit-code > /dev/null )";
+  //int staged_changes = system(command.c_str());
+  //command = "(cd ${WCSIMDIR}/ && rm -f gitstatusstring.txt && git status -uno --porcelain > gitstatusstring.txt && [ -s gitstatusstring.txt ] && rm gitstatusstring.txt)";
+  command = std::string("(WCSIMDIR='") + std::string(WCSIMDIR) + "' && "
+            " cd ${WCSIMDIR}/ && rm -f gitstatusstring.txt && "
+            " git diff HEAD > gitstatusstring.txt && "
+            " if [ -s gitstatusstring.txt ]; then /bin/false; fi )";
+  int any_changes = system(command.c_str());
+  if(any_changes){
+    std::cerr<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
+    std::cerr<<"WARNING: THERE ARE UNCOMMITTED CHANGES TO THE SOURCE FILES"<<std::endl;
+    std::cerr<<"    WCSimRootOptions::CommitHash WILL NOT BE ACCURATE!"<<std::endl;
+    std::cerr<<"       PLEASE COMMIT YOUR CHANGES AND REBUILD"<<std::endl;
+    std::cerr<<"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "<<std::endl;
   }
 }
 

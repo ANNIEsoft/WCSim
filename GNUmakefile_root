@@ -9,7 +9,9 @@ ROOTLIBS     := $(shell root-config --libs)
 
 CPPFLAGS  += -Wno-deprecated 
 CPPFLAGS  += -I$(PWD)/include
-CPPFLAGS  += -I$(ROOTSYS)/include $(ROOTCFLAGS) 
+CPPFLAGS  += -I$(ROOTSYS)/include $(ROOTCFLAGS)
+WCSIMDIR  := $(shell pwd)
+CPPFLAGS  += -DWCSIMDIR=\"$(WCSIMDIR)\"
 EXTRALIBS += $(ROOTLIBS)
 
 CXX = g++

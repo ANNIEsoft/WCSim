@@ -563,14 +563,16 @@ public:
   void Initialize();
 
   void ReInitialize() { // need to remove all subevents at the end, or they just get added anyway...
+    Current = 0;
+    if(fEventList==nullptr) return;
     for ( int i = fEventList->GetLast() ; i>=1 ; i--) {
-      //      G4cout << "removing element # " << i << "...";
+           // std::cout << "removing element # " << i << "...";
       WCSimRootTrigger* tmp = 
 	dynamic_cast<WCSimRootTrigger*>(fEventList->RemoveAt(i));
+      //std::cout<<"deleting tmp "<<tmp<<std::endl;
       delete tmp;
-      //G4cout <<"done !\n";
+      //std::cout <<"done !\n";
     }
-    Current = 0;
     WCSimRootTrigger* tmp = dynamic_cast<WCSimRootTrigger*>( (*fEventList)[0]);
     tmp->Clear();
   }

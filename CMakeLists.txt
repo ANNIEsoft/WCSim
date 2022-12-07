@@ -23,6 +23,8 @@ if(DEFINED ENV{NO_GENIE})
 else()
   message(STATUS "GENIE features enabled.")
 endif()
+# pass sourcefile directory
+add_definitions("-DWCSIMDIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 #----------------------------------------------------------------------------
 # Find ROOT (required package) in CONFIG mode. Looking for ROOTConfig.cmake.
 # Crucial for loading the proper definitions!
@@ -208,6 +210,7 @@ set(WCSIM_SCRIPTS
   CommitHash.txt
   PMTPositions_Scan_Glass.txt
   PMTPositions_Scan.txt
+  pmt_qe.txt
   )
 
 foreach(_script ${WCSIM_SCRIPTS})
