@@ -46,14 +46,13 @@
 #include "TH2D.h"
 
 // GENIE headers
-#ifndef NO_GENIE
-#include "GHEP/GHepParticle.h"
-#include "Ntuple/NtpMCTreeHeader.h"
-#include "Interaction/Interaction.h"
-#include "PDG/PDGCodes.h"
-#include "PDG/PDGUtils.h"
-#include "PDG/PDGLibrary.h"
-#endif
+#include "Framework/GHEP/GHepParticle.h"
+#include "Framework/Ntuple/NtpMCTreeHeader.h"
+#include "Framework/Interaction/Interaction.h"
+#include "Framework/ParticleData/PDGCodes.h"
+#include "Framework/ParticleData/PDGUtils.h"
+#include "Framework/ParticleData/PDGLibrary.h"
+
 #include "NCVSD.hh"
 
 #ifndef _SAVE_RAW_HITS
@@ -791,11 +790,6 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
   //  Get Event Information
   // ----------------------------------------------------------------------
   // pull information about the genie primary interactions from the PrimaryGeneratorAction
-#ifdef NO_GENIE
-  G4cout<<" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<G4endl;
-  G4cout<<" !!! Genie not loaded!!! Primary interaction information will not be filled! !!!"<<G4endl;
-  G4cout<<" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<G4endl;
-#endif
   }
   
   G4int         mode     = generatorAction->GetMode();			// neut interaction code
