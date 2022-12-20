@@ -12,11 +12,13 @@
 #include <fstream>
 
 // GENIE headers
+#ifndef NO_GENIE
 #include "Framework/GHEP/GHepParticle.h"
 #include "Framework/GHEP/GHepRecord.h"
 #include "Framework/Ntuple/NtpMCTreeHeader.h"
 #include "Framework/Ntuple/NtpMCEventRecord.h"
 #include "Framework/Interaction/Interaction.h"
+#endif
 #include "WCSimRootOptions.hh"
 
 class WCSimDetectorConstruction;

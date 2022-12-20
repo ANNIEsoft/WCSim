@@ -177,6 +177,7 @@ RUN echo "#!/bin/bash"                                      > /home/annie/WCSim/
     echo "source /home/annie/Geant4/install/bin/geant4.sh" >> /home/annie/WCSim/WCSim/sourceme && \
     echo "source /home/annie/ROOT/install/bin/thisroot.sh" >> /home/annie/WCSim/WCSim/sourceme && \
     echo "source /home/annie/WCSim/WCSim/envHadronic.sh"   >> /home/annie/WCSim/WCSim/sourceme && \
+    echo '#export NO_GENIE=1 #REBUILD WCSIM TO RUN WITHOUT GENIE' >> /home/annie/WCSim/WCSim/sourceme && \
     echo 'export PATH=${GENIE}/bin:/home/annie/lhapdf-5.9.1/install/bin:/home/annie/fsplit/:${PATH}' >> /home/annie/WCSim/WCSim/sourceme && \
     echo 'export LD_LIBRARY_PATH=/home/annie/WCSim/WCSim:${GENIE}/lib:/home/annie/lhapdf-5.9.1/install/lib:/home/annie/Pythia6Support/v6_424/lib:/home/annie/log4cpp/install/lib:$LD_LIBRARY_PATH' >> /home/annie/WCSim/WCSim/sourceme && \
     echo 'export ROOT_INCLUDE_PATH=/home/annie/WCSim/WCSim/include:$ROOT_INCLUDE_PATH' >> /home/annie/WCSim/WCSim/sourceme && \

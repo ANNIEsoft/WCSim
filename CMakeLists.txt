@@ -17,9 +17,12 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fdiagnostics-color=always -std=c++1y
 if(DEFINED ENV{GEANT4_10_2})
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DGEANT4_10_2")
 endif()
-
-message(STATUS "GENIE features enabled.")
-
+if(DEFINED ENV{NO_GENIE})
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNO_GENIE")
+  message(STATUS "GENIE features disabled.")
+else()
+  message(STATUS "GENIE features enabled.")
+endif()
 # pass sourcefile directory
 add_definitions("-DWCSIMDIR=\"${CMAKE_CURRENT_SOURCE_DIR}\"")
 #----------------------------------------------------------------------------
@@ -43,6 +46,7 @@ endif()
 
 ## Load macros: need to compile ROOT through cmake first and execute bin/thisroot.sh
 include(${ROOT_USE_FILE})
+if(NOT DEFINED ENV{NO_GENIE})
 #----------------------------------------------------------------------------
 # GENIE stuff
 #
@@ -80,6 +84,7 @@ link_directories($ENV{ROOTSYS}/lib)
 #include_directories($ENV{GEANT4_FQ_DIR}/include)
 
 set(Genie_LIBRARIES ${_genie_internal_libraries} ${_log4cpp_internal_libraries} ${_xerces_internal_libraries} )
+endif()
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
 # Locate sources and headers for this project
