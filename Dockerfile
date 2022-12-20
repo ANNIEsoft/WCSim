@@ -174,6 +174,7 @@ RUN echo "#!/bin/bash"                                      > /home/annie/WCSim/
     echo 'export PYTHIA6_INCLUDE_DIR=/home/annie/Pythia6Support/v6_424/inc/' >> /home/annie/WCSim/WCSim/sourceme && \
     echo 'export PYTHIA6_LIBRARY=/home/annie/Pythia6Support/v6_424/lib/' >> /home/annie/WCSim/WCSim/sourceme && \
     echo 'export GENIE=/home/annie/Genie/GENIE-v3-master/install' >> /home/annie/WCSim/WCSim/sourceme && \
+    echo 'source /opt/rh/devtoolset-3/enable'              >> /home/annie/WCSim/WCSim/sourceme && \
     echo "source /home/annie/Geant4/install/bin/geant4.sh" >> /home/annie/WCSim/WCSim/sourceme && \
     echo "source /home/annie/ROOT/install/bin/thisroot.sh" >> /home/annie/WCSim/WCSim/sourceme && \
     echo "source /home/annie/WCSim/WCSim/envHadronic.sh"   >> /home/annie/WCSim/WCSim/sourceme && \
