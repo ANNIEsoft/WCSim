@@ -39,13 +39,6 @@ RUN yum install -y cmake \
 && yum clean all \
 && rm -rf /var/cache/yum
 
-# since we installed g++ from devtoolset (because we need proper c++11 support)
-# it doesn't automatically set up links in /usr/local/bin for us, so do that manually.
-RUN for file in /opt/rh/devtoolset-3/root/usr/bin/{g++,gfortran,c++}; do \
-   fname=$(basename $file); \
-   ln -s $file /usr/bin/$fname; \
-done
-
 # make a home area to install stuff in
 # also requested for grid job use: create a bindpoint for /cvmfs
 # (grid jobs automatically try to bind this)
@@ -53,7 +46,8 @@ done
 RUN mkdir -p /home/annie && \
     mkdir /cvmfs && \
     touch sourceme && \
-    echo '#!/bin/bash' > /sourceme
+    echo '#!/bin/bash' > /sourceme && \
+    echo '. /opt/rh/devtoolset-3/enable' >> /sourceme
 
 # fsplit
 RUN mkdir /home/annie/fsplit && cd /home/annie/fsplit && \
@@ -178,7 +172,7 @@ RUN echo "#!/bin/bash"                                      > /home/annie/WCSim/
     echo "source /home/annie/Geant4/install/bin/geant4.sh" >> /home/annie/WCSim/WCSim/sourceme && \
     echo "source /home/annie/ROOT/install/bin/thisroot.sh" >> /home/annie/WCSim/WCSim/sourceme && \
     echo "source /home/annie/WCSim/WCSim/envHadronic.sh"   >> /home/annie/WCSim/WCSim/sourceme && \
-    echo '#export NO_GENIE=1 #REBUILD WCSIM TO RUN WITHOUT GENIE' >> /home/annie/WCSim/WCSim/sourceme && \
+    echo '#export NO_GENIE=1 #ALLOWS WCSIM TO BE BUILT WITHOUT GENIE' >> /home/annie/WCSim/WCSim/sourceme && \
     echo 'export PATH=${GENIE}/bin:/home/annie/lhapdf-5.9.1/install/bin:/home/annie/fsplit/:${PATH}' >> /home/annie/WCSim/WCSim/sourceme && \
     echo 'export LD_LIBRARY_PATH=/home/annie/WCSim/WCSim:${GENIE}/lib:/home/annie/lhapdf-5.9.1/install/lib:/home/annie/Pythia6Support/v6_424/lib:/home/annie/log4cpp/install/lib:$LD_LIBRARY_PATH' >> /home/annie/WCSim/WCSim/sourceme && \
     echo 'export ROOT_INCLUDE_PATH=/home/annie/WCSim/WCSim/include:$ROOT_INCLUDE_PATH' >> /home/annie/WCSim/WCSim/sourceme && \
