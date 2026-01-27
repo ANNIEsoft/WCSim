@@ -2,6 +2,15 @@
 #include <TH1F.h>
 #include <stdio.h>     
 #include <stdlib.h>    
+#include <TFile.h>
+#include <TTree.h>
+#include <TSystem.h>
+#include <TCanvas.h>
+#include <TClonesArray.h>
+
+#include "WCSimRootEvent.hh"
+#include "WCSimRootGeom.hh"
+#include "WCSimRootOptions.hh"
 // Simple example of reading a generated Root file
 void sample_readfile(char *filename=NULL, bool verbose=false)
 {
@@ -56,7 +65,7 @@ void sample_readfile(char *filename=NULL, bool verbose=false)
   }
   if (!file->IsOpen()){
     cout << "Error, could not open input file: " << filename << endl;
-    return -1;
+    return;
   }
   
   // Get the a pointer to the tree from the file
@@ -168,7 +177,9 @@ void sample_readfile(char *filename=NULL, bool verbose=false)
         printf("  Track initial momentum magnitude [MeV/c]: %f\n", wcsimroottrack->GetP());
         printf("  Track mass [MeV/c2]: %f\n", wcsimroottrack->GetM());
         printf("  Track ID: %d\n", wcsimroottrack->GetId());
-      }
+	printf("PrimaryParentID: %d\n", wcsimroottrack->GetPrimaryParentID());
+        printf("  DirectParentID: %d\n", wcsimroottrack->GetDirectParentID());      
+}
 
       
     }  // End of loop over tracks
@@ -278,7 +289,8 @@ void sample_readfile(char *filename=NULL, bool verbose=false)
                 if(thehittimeobject){
                   cout<<"  digit "<<i<<" photon "<<photonid<<": ";
                   cout<<" HitTime index "<<thephotonsid<<", pre-smear time "<<thehittimeobject->GetTruetime()
-                      <<", parent TrackID: "<<thehittimeobject->GetParentID()<<";";
+	          <<", PrimaryParentID: "<<thehittimeobject->GetPrimaryParentID()
+                  <<", DirectParentID: "<<thehittimeobject->GetDirectParentID()<<";";
                 }
                 cout<<endl;
                 photonid++;

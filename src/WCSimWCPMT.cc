@@ -166,7 +166,8 @@ void WCSimWCPMT::MakePeCorrection(WCSimWCHitsCollection* WCHC)
 	      assert(false);
 	    }
 	    peSmeared = rn1pe(PMT);
-	    int parent_id = (*WCHC)[i]->GetParentID(ip);
+	    int parent_id = (*WCHC)[i]->GetPrimaryParentID(ip);
+      int directparent_id = (*WCHC)[i]->GetDirectParentID(ip);
 
 	    //apply time smearing
 	    float Q = (peSmeared > 0.5) ? peSmeared : 0.5;
@@ -181,7 +182,8 @@ void WCSimWCPMT::MakePeCorrection(WCSimWCHitsCollection* WCHC)
 	      Digi->SetPe(ip,peSmeared);
 	      Digi->SetTime(ip,time_PMT);
 	      Digi->SetPreSmearTime(ip,time_true);
-	      Digi->SetParentID(ip,parent_id);
+	      Digi->SetPrimaryParentID(ip,parent_id);
+        Digi->SetDirectParentID(ip,directparent_id);
 	      DigiHitMapPMT[tube] = DigitsCollection->insert(Digi);
 	    }	
 	    else {
@@ -192,7 +194,8 @@ void WCSimWCPMT::MakePeCorrection(WCSimWCHitsCollection* WCHC)
 	      (*DigitsCollection)[DigiHitMapPMT[tube]-1]->SetPe(ip,peSmeared);
 	      (*DigitsCollection)[DigiHitMapPMT[tube]-1]->SetTime(ip,time_PMT);
 	      (*DigitsCollection)[DigiHitMapPMT[tube]-1]->SetPreSmearTime(ip,time_true);
-	      (*DigitsCollection)[DigiHitMapPMT[tube]-1]->SetParentID(ip,parent_id);
+	      (*DigitsCollection)[DigiHitMapPMT[tube]-1]->SetPrimaryParentID(ip,parent_id);
+        (*DigitsCollection)[DigiHitMapPMT[tube]-1]->SetDirectParentID(ip,directparent_id);
 	    }
       
 	  } // Loop over hits in each PMT

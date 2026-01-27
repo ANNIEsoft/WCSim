@@ -111,6 +111,7 @@ private:
   std::vector<double> lappdhit_globalcoorz;
   std::vector<float> lappdhit_truetime2, lappdhit_smeartime2;
   std::vector<int>   lappdhit_primaryParentID2;	
+  std::vector<int>   lappdhit_directParentID2;
   std::vector<int> lappdhit_stripnum;
 };
 

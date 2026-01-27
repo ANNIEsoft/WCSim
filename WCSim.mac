@@ -459,7 +459,7 @@
 #/WCSimIO/RootFile ANNIEtest_MRD_muon_sample  # for MRD range vs energy estimation
 #/WCSimIO/RootFile wcsim_Muon_Tank_Sample_killed # for measuring # digits vs energy loss in tank
 
-/run/beamOn 1000
+/run/beamOn 20
 # should run 10000 events for bonsai
 
 #exit

@@ -242,6 +242,17 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
       // =============================
       G4double hitTime           = preStepPoint->GetGlobalTime();
       G4double energyDeposition  = aStep->GetTotalEnergyDeposit();
+      G4int directParentID = aStep->GetTrack()->GetParentID();  //Is it really needed to get direct parent ID from TrackInformation? (DJA)
+      
+      // DEBUG: Print parent IDs for first few hits
+      static int hitDebugCount = 0;
+      if(hitDebugCount < 10) {
+        G4cout << "DEBUG WCSimWCSD: Hit #" << hitDebugCount 
+               << " PrimaryParentID=" << primParentID 
+               << " DirectParentID=" << directParentID 
+               << " TrackID=" << aStep->GetTrack()->GetTrackID() << G4endl;
+        hitDebugCount++;
+      }
       
       // Get information about the sensor
       // ================================
@@ -309,14 +320,16 @@ G4bool WCSimWCSD::ProcessHits(G4Step* aStep, G4TouchableHistory*)
         // Set the hitMap value to the collection hit number
         PMTHitMap[replicaNumber] = hitsCollection->insert( newHit );
         (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddPe(hitTime);
-        (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddParentID(primParentID);
+        (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddPrimaryParentID(primParentID);
+        (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddDirectParentID(directParentID);
         (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddHitPos(worldPosition);
         if(not isPMT){
           (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddStripPosition(localPosition);
         }
       } else {
         (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddPe(hitTime);
-        (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddParentID(primParentID);
+        (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddPrimaryParentID(primParentID);
+        (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddDirectParentID(directParentID);
         (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddHitPos(worldPosition);
         if(not isPMT){
           (*hitsCollection)[PMTHitMap[replicaNumber]-1]->AddStripPosition(localPosition);

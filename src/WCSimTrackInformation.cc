@@ -8,6 +8,7 @@ WCSimTrackInformation::WCSimTrackInformation(const G4Track* /*atrack*/)
   saveit = true;
   parentPdg=0;
   primaryParentID=-1;
+  directParentID=-1;
   //numreflections=0;
 }
 

@@ -334,7 +334,8 @@ void WCSimWCAddDarkNoise::AddDarkNoiseBeforeDigi(WCSimWCDigitsCollection* WCHCPM
 	    //G4cout<<"1 "<<(G4LogicalVolumeStore::GetInstance()->GetVolume("glassFaceWCPMT"))->GetName()<<"\n";
 	    //G4cout<<"2 "<<(*WCHCPMT)[0]->GetLogicalVolume()->GetName()<<"\n";
 	    ahit->SetTrackID(-1);
-	    ahit->SetParentID(PMTindex[noise_pmt], -1);
+	    ahit->SetPrimaryParentID(PMTindex[noise_pmt], -1);
+      ahit->SetDirectParentID(PMTindex[noise_pmt], -1);
 	    // Set the position and rotation of the pmt
 	    Float_t hit_pos[3];
 	    Float_t hit_rot[3];
@@ -373,7 +374,8 @@ void WCSimWCAddDarkNoise::AddDarkNoiseBeforeDigi(WCSimWCDigitsCollection* WCHCPM
 	  (*WCHCPMT)[ list[noise_pmt]-1 ]->SetPe(PMTindex[noise_pmt],pe);
 	  (*WCHCPMT)[ list[noise_pmt]-1 ]->SetTime(PMTindex[noise_pmt],current_time);
 	  (*WCHCPMT)[ list[noise_pmt]-1 ]->SetPreSmearTime(PMTindex[noise_pmt],current_time); //presmear==postsmear for dark noise
-	  (*WCHCPMT)[ list[noise_pmt]-1 ]->SetParentID(PMTindex[noise_pmt],-1);
+	  (*WCHCPMT)[ list[noise_pmt]-1 ]->SetPrimaryParentID(PMTindex[noise_pmt],-1);
+    (*WCHCPMT)[ list[noise_pmt]-1 ]->SetDirectParentID(PMTindex[noise_pmt],-1);	
 	  PMTindex[noise_pmt]++;
 #ifdef WCSIMWCADDDARKNOISE_VERBOSE
 	  if(noise_pmt < NPMTS_VERBOSE)

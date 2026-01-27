@@ -613,6 +613,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
      // std::vector<int>   primaryParentID2;
      double hit_time_smear, hit_time_true;
      int hit_parentid; G4int id0=0;
+     int hit_directparentid;
      //loop over the DigitsCollection
      for(int idigi = 0; idigi < WCDC_hitslappd->entries(); idigi++) {
         int digi_tubeid = (*WCDC_hitslappd)[idigi]->GetTubeID();
@@ -622,11 +623,14 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
         for(G4int id = 0; id < (*WCDC_hitslappd)[idigi]->GetTotalPe(); id++){
           id0++;
           hit_time_true  = (*WCDC_hitslappd)[idigi]->GetPreSmearTime(id);
-          hit_parentid = (*WCDC_hitslappd)[idigi]->GetParentID(id);
+          hit_parentid = (*WCDC_hitslappd)[idigi]->GetPrimaryParentID(id);
+          hit_directparentid = (*WCDC_hitslappd)[idigi]->GetDirectParentID(id);
+
           //G4cout<<"0___LAPPD idigi= "<<idigi<<" id= "<<id<<"/"<<(*WCDC_hitslappd)[idigi]->GetTotalPe()<<G4endl;
           //G4cout<<"id0= "<<id0<<" hit_time_true= "<<hit_time_true<<" hit_parentid= "<<hit_parentid<<G4endl;
           lappdhit_truetime2.push_back(hit_time_true);
           lappdhit_primaryParentID2.push_back(hit_parentid);
+          lappdhit_directParentID2.push_back(hit_directparentid);
           ////---strip number and digitised hits-----
           int stripno = (*WCDC_hitslappd)[idigi]->GetStripNo(id);
           lappdhit_stripnum.push_back(stripno);
@@ -670,11 +674,13 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
         if(digi_tubeid < NPMTS_VERBOSE) {
           G4cout << "Adding " << lappdhit_truetime2.size()
                  << " Cherenkov hits in tube " << digi_tubeid
-                 << " with truetime:smeartime:primaryparentID";
+                 << " with truetime:smeartime:primaryparentID:directparentID"
+                 ;
           for(G4int id = 0; id < lappdhit_truetime2.size(); id++) {
              G4cout << " " << lappdhit_truetime2[id]
                     << ":" << lappdhit_smeartime2[id]
-                    << ":" << lappdhit_primaryParentID2[id];
+                    << ":" << lappdhit_primaryParentID2[id]
+                    << ":" << lappdhit_directParentID2[id];
           }//id
          G4cout << G4endl;
         }
@@ -683,6 +689,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
         smeartime2.clear();
         truetime2.clear();
         primaryParentID2.clear();
+        directParentID2.clear();
         */
       } //idigi
     }
@@ -702,6 +709,7 @@ void WCSimEventAction::EndOfEventAction(const G4Event* evt)
     lappdhit_smeartime2.clear();
     lappdhit_truetime2.clear();
     lappdhit_primaryParentID2.clear();
+    lappdhit_directParentID2.clear();
     lappdhit_stripnum.clear();
     lappdhit_neighstripnum.clear();
     lappdhit_neighstrippeak.clear();
@@ -1383,7 +1391,9 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
                                "NuIntx",                  // end process name
                                pdir2,                     // tank exit position (N/A)
                                0,                         // tank exit energy (relativistic)
-                               pdir2);                    // tank exit 3-momentum (N/A)
+                               pdir2,                     // tank exit 3-momentum (N/A)
+                              -1,
+                            -1);                    
     }
     
     // the rest of the tracks come from WCSimTrajectory
@@ -1561,7 +1571,20 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
                                    endProcess,    // end process name
                                    tankexit,      // tank exit position
                                    tankExitE,     // tank exit energy (relativistic)
-                                   tankexitp);    // tank exit 3-momentum
+                                   tankexitp,    // tank exit 3-momentum
+                                   trj->GetPrimaryParentID(),  // primaryParentID
+                                   trj->GetParentID());        // directParentID
+        
+        // DEBUG: Print parent IDs being written to ROOT
+        static int rootDebugCount = 0;
+        if(rootDebugCount < 10) {
+          G4cout << "DEBUG WCSimEventAction: Writing Track #" << rootDebugCount
+                 << " TrackID=" << id
+                 << " PrimaryParentID=" << trj->GetPrimaryParentID()
+                 << " DirectParentID=" << trj->GetParentID()
+                 << " PDG=" << ipnu << G4endl;
+          rootDebugCount++;
+        }
         }
         
         
@@ -1622,16 +1645,20 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
     wcsimrootevent->SetNumTubesHit(WCDC_hits->entries());
     std::vector<float> truetime, smeartime;
     std::vector<int>   primaryParentID;
+    std::vector<int>   directParentID;
     double hit_time_smear, hit_time_true;
     int hit_parentid;
+    int hit_directparentid;
     //loop over the DigitsCollection
     for(int idigi = 0; idigi < WCDC_hits->entries(); idigi++) {
       int digi_tubeid = (*WCDC_hits)[idigi]->GetTubeID();
       for(G4int id = 0; id < (*WCDC_hits)[idigi]->GetTotalPe(); id++){
 	hit_time_true  = (*WCDC_hits)[idigi]->GetPreSmearTime(id);
-	hit_parentid = (*WCDC_hits)[idigi]->GetParentID(id);
+	hit_parentid = (*WCDC_hits)[idigi]->GetPrimaryParentID(id);
+  hit_directparentid = (*WCDC_hits)[idigi]->GetDirectParentID(id);
 	truetime.push_back(hit_time_true);
 	primaryParentID.push_back(hit_parentid);
+  directParentID.push_back(hit_directparentid);
 #ifdef _SAVE_RAW_HITS_VERBOSE
 	hit_time_smear = (*WCDC_hits)[idigi]->GetTime(id);
 	smeartime.push_back(hit_time_smear);
@@ -1652,10 +1679,12 @@ void WCSimEventAction::FillRootEvent(G4int event_id,
 #endif
       wcsimrootevent->AddCherenkovHit(digi_tubeid,
 				      truetime,
-				      primaryParentID);
+              primaryParentID,
+              directParentID);
       smeartime.clear();
       truetime.clear();
       primaryParentID.clear();
+      directParentID.clear();
     }//idigi
   }//if(WCDC_hits)
 #endif //_SAVE_RAW_HITS
@@ -1797,6 +1826,7 @@ void WCSimEventAction::CreateNewLAPPDFile(){
   LAPPDtree->Branch("lappdhit_truetime2",&lappdhit_truetime2);
   LAPPDtree->Branch("lappdhit_smeartime2", &lappdhit_smeartime2);
   LAPPDtree->Branch("lappdhit_primaryParentID2",&lappdhit_primaryParentID2);
+  LAPPDtree->Branch("lappdhit_directParentID2",&lappdhit_directParentID2);
   LAPPDtree->Branch("lappdhit_NoOfneighstripsHit", &lappdhit_NoOfneighstripsHit);
   LAPPDtree->Branch("lappdhit_neighstripnum", &lappdhit_neighstripnum);
   LAPPDtree->Branch("lappdhit_neighstrippeak", &lappdhit_neighstrippeak);

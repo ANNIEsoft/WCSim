@@ -2,6 +2,12 @@
 # be sure that the neutrinosDirectory is set before setting the primariesDirectory!
 #/mygen/neutrinosdirectory /home/marc/LinuxSystemFiles/WChSandBox/build/fluxesandtables/gntp.*.ghep.root
 #/mygen/primariesdirectory /home/marc/LinuxSystemFiles/WChSandBox/build/fluxesandtables/annie_tank_flux.*.root
-/mygen/neutrinosdirectory /pnfs/annie/persistent/users/vfischer/genie_files/BNB_Water_10k_22-05-17/gntp.*.ghep.root
-/mygen/primariesdirectory /pnfs/annie/persistent/users/moflaher/g4dirt_vincentsgenie/BNB_Water_10k_22-05-17/annie_tank_flux.*.root
+#/mygen/neutrinosdirectory /pnfs/annie/persistent/simulations/genie3/G1810a0211a/standard/tank/gntp.1.ghep.root
+#/mygen/primariesdirectory /pnfs/annie/persistent/simulations/genie3/G1810a0211a/standard/tank/annie_tank_flux.1.root
+#/mygen/neutrinosdirectory /annie/app/users/jminock/genie_shed/gntp.1.ghep.root
+#/mygen/primariesdirectory /annie/app/users/jminock/genie_shed/annie_tank_flux.1.root
+#/mygen/neutrinosdirectory ./gntp.*.ghep.root
+#/mygen/primariesdirectory ./annie_tank_flux.*.root
+/mygen/neutrinosdirectory /pnfs/annie/persistent/simulations/genie3/G1810a0211a/standardv1.0/tank/gntp.0.ghep.root
+/mygen/primariesdirectory /pnfs/annie/persistent/simulations/g4dirt/G1810a0211a/standardv1.0/tank/annie_tank_flux.0.root
 /mygen/primariesoffset 0

@@ -70,6 +70,7 @@ private:
    */
   std::map<int, std::vector<int> > fDigiComp;
   std::map<int, G4int>    primaryParentID; ///< Primary parent ID of the Hit (do not use for Digits)
+  std::map<int, G4int>    directParentID;
   std::map<int, G4int>    stripno;
   std::map<int, std::map<int,double>> neigh_strips_peaks;
   std::map<int, std::map<int,double>> neigh_strips_times;
@@ -95,7 +96,8 @@ public:
   inline void SetPe(G4int gate,  G4float Q)      {pe[gate]     = Q;};
   inline void SetTime(G4int gate, G4float T)    {time[gate]   = T;};
   inline void SetPreSmearTime(G4int gate, G4float T)    {time_presmear[gate]   = T;};
-  inline void SetParentID(G4int gate, G4int parent) { primaryParentID[gate] = parent; };
+  inline void SetPrimaryParentID(G4int gate, G4int parent) { primaryParentID[gate] = parent; };
+  inline void SetDirectParentID(G4int gate, G4int directparent) { directParentID[gate] = directparent; };
   inline void SetStripNo(G4int gate, G4int strip){ stripno[gate] = strip; };
   inline void SetNeighStripNo(G4int gate, std::map<int,double> neighstrip ){ neigh_strips_peaks[gate]=neighstrip; };
   inline void SetNeighStripTime(G4int gate, std::map<int,double> neighstriptime ){ neigh_strips_times[gate]=neighstriptime; };
@@ -113,7 +115,8 @@ public:
     digi_comp.clear();
   }
 
-  inline G4int   GetParentID(int gate) { return primaryParentID.at(gate);};
+  inline G4int   GetPrimaryParentID(int gate) { return primaryParentID.at(gate);};
+  inline G4int   GetDirectParentID(int gate) { return directParentID.at(gate);};
   inline G4float GetGateTime(int gate) { return TriggerTimes.at(gate);}
   inline G4int   GetTubeID() {return tubeID;};
   inline G4int   GetLAPPDID() {return lappdID;};

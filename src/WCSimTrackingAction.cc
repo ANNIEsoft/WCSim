@@ -146,6 +146,7 @@ void WCSimTrackingAction::PostUserTrackingAction(const G4Track* aTrack){
         WCSimTrackInformation* infoSec = new WCSimTrackInformation(anInfo);
         infoSec->WillBeSaved(false);
         infoSec->SetParentPdg(thispdg);
+        infoSec->SetPrimaryParentID(anInfo->GetPrimaryParentID()); // pass down primary parent ID, Do I need to set DirectParentID too? (DJA)
         (*secondaries)[i]->SetUserInformation(infoSec);
       }
   }
@@ -163,7 +164,19 @@ void WCSimTrackingAction::PostUserTrackingAction(const G4Track* aTrack){
     currentTrajectory->SetStoppingTime(currentTime);
     currentTrajectory->SetStoppingMomentum(currentMomentum);
     currentTrajectory->SetParentPdg(anInfo->GetParentPdg());
+    currentTrajectory->SetPrimaryParentID(anInfo->GetPrimaryParentID());
     currentTrajectory->SetSaveFlag(anInfo->isSaved());
+    
+    // DEBUG: Print parent IDs for first few tracks
+    static int trackDebugCount = 0;
+    if(trackDebugCount < 10 && anInfo->isSaved()) {
+      G4cout << "DEBUG WCSimTrackingAction: Track #" << trackDebugCount
+             << " TrackID=" << aTrack->GetTrackID()
+             << " PrimaryParentID=" << anInfo->GetPrimaryParentID()
+             << " DirectParentID(ParentID)=" << aTrack->GetParentID()
+             << " PDG=" << aTrack->GetDefinition()->GetPDGEncoding() << G4endl;
+      trackDebugCount++;
+    }
   }
   
   // report every 100000'th track, just to see progress
