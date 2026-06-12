@@ -231,19 +231,26 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIECylinderScan()
 	
 	// Create rotation matrices for the orientations of the PMTs
 	std::vector<G4RotationMatrix*> pmt_rotation_matrices;
+	std::vector<G4RotationMatrix*> tilted_pmt_rotation_matrices;
 	// Bottom PMTs have panel number 0
 	G4RotationMatrix *WCBottomCapRotation = new G4RotationMatrix();
-	pmt_rotation_matrices.push_back(WCBottomCapRotation);	
+	pmt_rotation_matrices.push_back(WCBottomCapRotation);
+	tilted_pmt_rotation_matrices.push_back(WCBottomCapRotation);
 	// Barrel PMTs have panel numbers 1-8
 	for(int facei=0; facei<WCBarrelRingNPhi; facei++){
 		G4RotationMatrix* WCPMTRotationNext = new G4RotationMatrix(*WCPMTRotation);
+		G4RotationMatrix* WCPMTtiltRotationNext = new G4RotationMatrix(*WCPMTRotation);
 		WCPMTRotationNext->rotateX((dPhi*facei)-67.5*deg+180*deg);
+		WCPMTtiltRotationNext->rotateX((dPhi*facei)-67.5*deg+180*deg);
+		WCPMTtiltRotationNext->rotateY(-53*deg);
 		pmt_rotation_matrices.push_back(WCPMTRotationNext);
+		tilted_pmt_rotation_matrices.push_back(WCPMTtiltRotationNext);
 	}
 	// Top PMTs have panel number 9
 	G4RotationMatrix *WCTopCapRotation = new G4RotationMatrix();
 	WCTopCapRotation->rotateY(180.*deg);
 	pmt_rotation_matrices.push_back(WCTopCapRotation);
+	tilted_pmt_rotation_matrices.push_back(WCTopCapRotation);
 
 	G4cout <<"Size of pmt_rotation_matrices: "<<pmt_rotation_matrices.size()<<G4endl;
 
@@ -252,20 +259,38 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIECylinderScan()
 	std::string next_pmt;
 	double pmt_x, pmt_y, pmt_z, pmt_dirx, pmt_diry, pmt_dirz;
 	double pmt_x_shift, pmt_y_shift, pmt_z_shift;
+	double tilt_pmt_x_shift, tilt_pmt_y_shift, tilt_pmt_z_shift;
+    double pmt_tilt_angle;
 	int panel_nr, pmt_type;
 	int PMTID;
+
 	while (!pmt_position_file.eof()){
-		pmt_position_file >> PMTID >> panel_nr >> pmt_x >> pmt_y >> pmt_z >> pmt_dirx >> pmt_diry >> pmt_dirz >> pmt_type;
+		pmt_position_file >> PMTID >> panel_nr >> pmt_x >> pmt_y >> pmt_z >> pmt_dirx >> pmt_diry >> pmt_dirz >> pmt_type >> pmt_tilt_angle;
 		if (pmt_position_file.eof()) break;
-		//G4cout << "Read in PMT "<<PMTID<<", panel nr: "<<panel_nr<<", Position ("<<pmt_x<<","<<pmt_y<<","<<pmt_z<<"), PMT type: "<<pmt_type<<G4endl;
 		G4LogicalVolume *logicWCPMT = logicWCPMTs.at(pmt_type);
+		G4RotationMatrix *tilt_pmt_rot = new G4RotationMatrix(*pmt_rotation_matrices.at(panel_nr));
+		//G4cout << "Read in PMT "<<PMTID<<", panel nr: "<<panel_nr<<", Position ("<<pmt_x<<","<<pmt_y<<","<<pmt_z<<"), PMT type: "<<pmt_type<<", Tilt angle: "<<pmt_tilt_angle<<G4endl;
+		tilt_pmt_rot->rotateY(-pmt_tilt_angle * deg);   // apply PMT tilt rotation
 		G4RotationMatrix *pmt_rot = pmt_rotation_matrices.at(panel_nr);
 		pmt_x_shift = pmt_x*cm;
 		pmt_y_shift = (168.1-pmt_z)*cm;
 		pmt_z_shift = ((pmt_y+14.45))*cm;
-		//pmt_z_shift = ((pmt_y+14.45)-InnerStructureCentreOffset/10.)*cm;
+		tilt_pmt_z_shift = (pmt_y+14.45+13.9)*cm;
 		//G4cout <<"Edited PMT position ("<<pmt_x_shift<<","<<pmt_y_shift<<","<<pmt_z_shift<<")"<<G4endl;
 		G4ThreeVector PMTPosition(pmt_x_shift,pmt_y_shift,pmt_z_shift);
+		G4ThreeVector PMTPosition_tilt(pmt_x_shift,pmt_y_shift,tilt_pmt_z_shift);
+
+		// only rotate the affected PMTs (ignore Top, Bottom, and ANNIE Hamamatsu PMTs)
+		if ((pmt_type == 3)||(pmt_type == 0 && panel_nr != 0)){
+		G4VPhysicalVolume *physicalWCPMT = new G4PVPlacement(tilt_pmt_rot,	//its rotation
+															PMTPosition_tilt,		//its position
+															logicWCPMT,			//its logical volume
+															"WCPMT",			//its name
+															logicWCBarrel,		//its mother volume
+															false,				//no boolean operations
+															PMTID,				//ID for this PMT (=channelkey in data)
+															true);				//check overlaps*/
+		} else { 
 		G4VPhysicalVolume *physicalWCPMT = new G4PVPlacement(pmt_rot,	//its rotation
 															PMTPosition,		//its position
 															logicWCPMT,			//its logical volume
@@ -274,6 +299,7 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIECylinderScan()
 															false,				//no boolean operations
 															PMTID,				//ID for this PMT (=channelkey in data)
 															true);				//check overlaps*/
+		}
 	}
 	pmt_position_file.close();
 
@@ -298,13 +324,18 @@ G4LogicalVolume* WCSimDetectorConstruction::ConstructANNIECylinderScan()
 		G4double CellCentreY = WCIDRadius * cos(dPhi*facei);
 		
 		double verticalSpacingLAPPD	= mainAnnulusHeight/(WCLAPPDperCellVertical+1);
-		
+		//G4cout<<"verticalSpacingLAPPD was: " << verticalSpacingLAPPD <<G4endl;
+		verticalSpacingLAPPD = 550;
+		//G4cout<<"verticalSpacingLAPPD now: " << verticalSpacingLAPPD <<G4endl;
 		for(G4double j = 0; j < WCLAPPDperCellVertical; j++){	// num LAPPD cols in the central ring
-		
-		G4ThreeVector LAPPDPosition = G4ThreeVector(CellCentreX,
-													CellCentreY,
-													-mainAnnulusHeight/2.+(j+1.)*verticalSpacingLAPPD);
-		
+	
+		//G4cout<< -mainAnnulusHeight/2. << " " << (j-1.)*verticalSpacingLAPPD<< G4endl;
+		G4ThreeVector LAPPDPosition = G4ThreeVector(CellCentreX, CellCentreY, -119.2+(j-1.)*verticalSpacingLAPPD);
+		if(CellCentreY > -100) continue;
+		if((facei == 4 && j == 0) || (facei == 4 && j == 2) || (facei == 3 && j == 1) || (facei == 5 && j == 1) ) continue;
+
+		//G4cout<< "Putting "<< facei<< "th LAPPD at "<<LAPPDPosition<<G4endl;
+
 		G4VPhysicalVolume* physiWCBarrelLAPPD =
 		new G4PVPlacement(WCLAPPDRotationNext,                      // its rotation
 							LAPPDPosition,                          // its position

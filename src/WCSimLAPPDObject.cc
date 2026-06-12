@@ -62,6 +62,24 @@ G4float* WCSimLAPPDObject::GetCollectionEfficiencyArray(){
   static G4float CE[10] = { 100., 100., 100., 100., 100., 100., 100., 100., 100., 100.};
   // CollectionEfficiency before modification on 2015-03-27 (Different from SKDetSim)
   // static G4float CE[10]={100,100,99,95,90,85,80,69,35,13}; 
+
+  // 0.05 height
+  //static G4float CE[10] = {83.08139999999999,86.38524450659465,89.77418831538222,92.6474904290534,95.61177509118487,98.17723228980405,99.52376371657738,93.51187976305238,76.20134983323001,0.0};
+  // 0.05 height + 1
+  //static G4float CE[10] = {84.0814, 87.38524450659465, 90.77418831538222, 93.6474904290534, 96.61177509118487, 99.17723228980405, 100.52376371657739, 94.51187976305238, 77.20134983323001, 0.0};
+
+  //static G4float CE[10] = {0, 0, 0, 96.61177509118487, 99.17723228980405, 100.52376371657739, 94.51187976305238, 77.20134983323001, 0.0};
+  // ~ 5cm active
+  //static G4float CE[10] = {100, 100, 100, 100, 100, 0,0,0,0,0};
+  // ~ 1cm active
+  // ?
+  
+  
+  
+  // 0.0092456 height
+  //static G4float CE[10] = {83.08139999999999, 83.69232049540342, 84.34244850736174, 85.08174680488179, 85.98863042107332, 87.21047141188019, 89.08244041464535, 91.57234059392873, 97.78303362808366, 0.0};
+  //To enable the collection efficiency parameter, the user must set `/WCSim/PMTCollEff on` in the macro.
+
   return CE;
 }
 
@@ -84,6 +102,7 @@ float LAPPD::HitTimeSmearing(float Q) {
   if (timingResolution < 0.58) timingResolution=0.58;
   float Smearing_factor = G4RandGauss::shoot(0.0,timingResolution);
   return Smearing_factor;
+
 }
 
 G4float* LAPPD::Getqpe()
@@ -208,19 +227,39 @@ G4float* LAPPD::Getqpe()
 //data for QE for LAPPDs was obtained: http://indico.cern.ch/event/432527/contributions/1071935/attachments/1319657/1979729/Pilot_Production_of_LAPPD_-_Aug_5_2016_FINAL_V5.0_08-03-2016.pdf - Minot, ICHEP 2016
 //data exist from ~363. - 628. nm [everyhting else uses PMTs QE]
 G4float* LAPPD::GetQEWavelength(){
-  static G4float wavelength_value[20] = { 280., 300., 320., 340., 360., 380., 400., 420., 440., 460., 480., 500., 520., 540., 560., 580., 600., 620., 640., 660.};
+  // wavelength bin for 19 Celsius and RT
+  //static G4float wavelength_value[20] = { 280., 300., 320., 340., 360., 380., 400., 420., 440., 460., 480., 500., 520., 540., 560., 580., 600., 620., 640., 660.};
+
+  // wavelength bin for LAPPD 25 for 40
+  static G4float wavelength_value[20] = {220., 240., 260., 280., 300., 320., 340., 360., 380., 400., 420., 440., 460., 480., 500., 520., 540., 560., 580., 600.};
+  //static G4float wavelength_value[20] = {280., 300., 320., 340., 360., 380., 400., 420., 440., 460., 480., 500., 520., 540., 560., 580., 600.,  620., 640., 660.};
+
   return wavelength_value;
 }
 
 G4float* LAPPD::GetQE(){  
+// new data from LAPPD 25 for 40
+static G4float QE[20] = {0.02937435, 0.06062565, 0.09187696 , 0.12312826  ,  0.15437956  , 0.18471379  , 0.21641814 , 0.2428098   , 0.24469183 , 0.22234098  ,  0.207122    ,0.19884722  ,  0.17932031  ,  0.14470496  ,0.1113269  ,   0.09028386  ,  0.07672619  ,0.06275337  , 0.05160584 ,  0.03901694};
+//
+
+// new QE start from 280ns
+//static G4float QE[20] = {0.12312826  ,  0.15437956  , 0.18471379  , 0.21641814 , 0.2428098   , 0.24469183 , 0.22234098  ,  0.207122    ,0.19884722  ,  0.17932031  ,  0.14470496  ,0.1113269  ,   0.09028386  ,  0.07672619  ,0.06275337  , 0.05160584 ,  0.03901694, 0.03, 0.02, 0.01};
+
 // estimate QE @ 19 Celsius:  //the value @ 340nm cannot be 0.169 as for PMTs so I insert: 0.10!!
-static G4float QE[20] = { 0.00, .0139, .0854, .10, .12000, .10060, .09129, .09369, .09750, .09284, .07616, .05902, .05200, .04707, .04226, .03543, .03038, .02456, .00158, 0.00};
+//static G4float QE[20] = { 0.00, .0139, .0854, .10, .12000, .10060, .09129, .09369, .09750, .09284, .07616, .05902, .05200, .04707, .04226, .03543, .03038, .02456, .00158, 0.00};
+
 // estimate QE @ RT:  
 //static G4float QE[20] = { 0.00, .0139, .0854, .169, .22629, .18517, .15956, .16345, .16189, .14715, .11301, .08431, .07112, .06724, .06103, .05405, .04551, .03776, .00158, 0.00};
-  return QE;
+
+//static G4float QE[20] = { 1., 1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,};
+
+
+return QE;
 }
 G4float LAPPD::GetmaxQE(){
-  const G4float maxQE = 0.15; //for LAPPDs //0.211; if for PMTs
+
+  const G4float maxQE = 0.25; //for LAPPDs //0.211; if for PMTs
+
   return maxQE;
 }
 
